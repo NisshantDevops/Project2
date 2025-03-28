@@ -8,14 +8,14 @@ export const StatusMessage = (data) =>{
 }
 
 export const Texts = {
-    Welcome_Back: "Welcome Back!",
-    Login_Message: "Sign in to continue to Velzon.",
-    Signup_Redirect: "Don't have an account?",
-    Signup_Link: "Signup",
+    WelcomeBack: "Welcome Back!",
+    LoginMessage: "Sign in to continue to Velzon.",
+    SignupRedirect: "Don't have an account?",
+    SignupLink: "Signup",
     SignIn: "Sign In",
-    Forgot_PassWord: "Forgot Password?",
+    ForgotPassWord: "Forgot Password?",
     EnterEmail: "Enter your email to receive reset instructions.",
     ResetPassword: "Reset Password",
-    Change_Password: "Change Password",
+    ChangePassword: "Change Password",
     EnterPasswordDetails: "Enter Password Details",
 };

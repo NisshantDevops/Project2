@@ -77,7 +77,7 @@ const ChangePassword = () => {
                         <Card className="mt-2">
                             <CardBody className="fix-margin p-4 mt-4">
                                 <div className="text-center mt-2">
-                                    <h5 className="text-primary">{Texts.Change_Password}</h5>
+                                    <h5 className="text-primary">{Texts.ChangePassword}</h5>
                                 </div>
 
                                 <div className="p-2 mt-2">
@@ -129,7 +129,7 @@ const ChangePassword = () => {
                                                 disabled={loading}
                                                 loader={loading}
                                             >
-                                                {Texts.Change_Password}
+                                                {Texts.ChangePassword}
                                             </BaseButton>
                                         </div>
                                     </Form>

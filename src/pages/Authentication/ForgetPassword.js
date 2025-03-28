@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ParticlesAuth from "../../pages/AuthenticationInner/ParticlesAuth";
 import BaseButton from "../../Components/Base/Button";
 import BaseInput from "../../Components/Base/Input";
-import { StatusMessage,Texts } from "../../Components/Constants/Common";
+import { StatusMessage, Texts } from "../../Components/Constants/Common";
 import { sendForgotPasswordRequest, setUpdatePassword } from "../../Api/sendForgetPasswordRequest";
 import { ConfirmPassword, Email, NewPassword, Otp, Password, Verfi } from "../../Components/Constants/LoginConstant";
 import { Check, Placeholder } from "../../Components/Constants/Validation";
@@ -18,7 +18,7 @@ const ForgetPasswordPage = () => {
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
-    const [isEmailVerified, setIsEmailVerified] = useState(false); 
+    const [isEmailVerified, setIsEmailVerified] = useState(false);
 
     const validation = useFormik({
         initialValues: {
@@ -35,7 +35,7 @@ const ForgetPasswordPage = () => {
             }),
             newPassword: Yup.string().when([], {
                 is: () => isEmailVerified,
-                then: Yup.string().min(6, Check.CheckPassword(Password,6)).required(Check.require(NewPassword)),
+                then: Yup.string().min(6, Check.CheckPassword(Password, 6)).required(Check.require(NewPassword)),
             }),
             confirmPassword: Yup.string().when(NewPassword, {
                 is: () => isEmailVerified,
@@ -57,12 +57,12 @@ const ForgetPasswordPage = () => {
                     if (StatusMessage(response?.statusCode)) {
                         toast.success(response?.message);
                         setSuccessMsg(response?.message);
-                        setIsEmailVerified(true); 
+                        setIsEmailVerified(true);
                     } else {
                         toast.error(response?.message);
                     }
                 } else {
-                    
+
                     response = await setUpdatePassword({
                         email: values.email,
                         otp: values.otp,
@@ -117,47 +117,44 @@ const ForgetPasswordPage = () => {
                                                 disabled={isEmailVerified}
                                             />
                                             {isEmailVerified && (
-                                                <BaseInput
-                                                    label={Otp}
-                                                    type="text"
-                                                    name="otp"
-                                                    placeholder={Placeholder(Otp)}
-                                                    value={validation.values.otp}
-                                                    onChange={validation.handleChange}
-                                                    onBlur={validation.handleBlur}
-                                                    error={validation.touched.otp && validation.errors.otp}
-                                                    required
-                                                />
-                                            )}
+                                                <>
+                                                    <BaseInput
+                                                        label={Otp}
+                                                        type="text"
+                                                        name="otp"
+                                                        placeholder={Placeholder(Otp)}
+                                                        value={validation.values.otp}
+                                                        onChange={validation.handleChange}
+                                                        onBlur={validation.handleBlur}
+                                                        error={validation.touched.otp && validation.errors.otp}
+                                                        required
+                                                    />
 
-                                            {isEmailVerified && (
-                                                <BaseInput
-                                                    label={NewPassword}
-                                                    type={Password}
-                                                    name="newPassword"
-                                                    placeholder={Placeholder(NewPassword)}
-                                                    value={validation.values.newPassword}
-                                                    onChange={validation.handleChange}
-                                                    onBlur={validation.handleBlur}
-                                                    error={validation.touched.newPassword && validation.errors.newPassword}
-                                                    required
-                                                />
-                                            )}
+                                                    <BaseInput
+                                                        label={NewPassword}
+                                                        type={Password}
+                                                        name="newPassword"
+                                                        placeholder={Placeholder(NewPassword)}
+                                                        value={validation.values.newPassword}
+                                                        onChange={validation.handleChange}
+                                                        onBlur={validation.handleBlur}
+                                                        error={validation.touched.newPassword && validation.errors.newPassword}
+                                                        required
+                                                    />
 
-                                            {isEmailVerified && (
-                                                <BaseInput
-                                                    label={ConfirmPassword}
-                                                    type={Password}
-                                                    name="confirmPassword"
-                                                    placeholder={Placeholder(ConfirmPassword)}
-                                                    value={validation.values.confirmPassword}
-                                                    onChange={validation.handleChange}
-                                                    onBlur={validation.handleBlur}
-                                                    error={validation.touched.confirmPassword && validation.errors.confirmPassword}
-                                                    required
-                                                />
+                                                    <BaseInput
+                                                        label={ConfirmPassword}
+                                                        type={Password}
+                                                        name="confirmPassword"
+                                                        placeholder={Placeholder(ConfirmPassword)}
+                                                        value={validation.values.confirmPassword}
+                                                        onChange={validation.handleChange}
+                                                        onBlur={validation.handleBlur}
+                                                        error={validation.touched.confirmPassword && validation.errors.confirmPassword}
+                                                        required
+                                                    />
+                                                </>
                                             )}
-
                                             <div className="mt-4">
                                                 <BaseButton
                                                     color="success"

@@ -1,4 +1,4 @@
 export const Login = "login"
 export const ForgotPassword = "verifyEmail"
 export const UpdatePassword = "updatePassword"
-export const changePassword = "changePassword"
+export const ChangePassword = "changePassword"
