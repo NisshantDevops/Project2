@@ -1,21 +1,22 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import {
-  Card, CardBody, Col, Container, Row, Form, FormFeedback, Alert
+  Card, CardBody, Col, Container, Row, Form,  Alert
 } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { Field, useFormik } from "formik";
+import {useFormik } from "formik";
 import * as Yup from "yup";
-import { toast} from "react-toastify"; 
-import "react-toastify/dist/ReactToastify.css"; 
-import logoLight from "../../assets/images/logo-light.png";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 import BaseButton from "../../Components/Base/Button";
 import BaseInput from "../../Components/Base/Input";
 import { login } from "../../Api/LoginApi";
-import {StatusMessage} from "../../Components/Constant/Common";
-import { Validation , Placeholder, Check} from "../../Components/Constant/Validation";
-import { Email, Password,PageTitle } from "../../Components/Constant/LoginConstant";
-import { Texts } from "../../Components/Constant/Common";
+import { StatusMessage } from "../../Components/Constants/Common";
+import {  Placeholder, Check } from "../../Components/Constants/Validation"; 
+import { Email, Password, PageTitle } from "../../Components/Constants/LoginConstant";
+import { Texts } from "../../Components/Constants/Common";
+
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -29,38 +30,45 @@ const Login = () => {
       email: "",
       password: "",
     },
-    validationSchema:Yup.object({
+    validationSchema: Yup.object({
       email: Yup.string().email(Check.CheckValid(Email)).required(Check.require(Email)),
       password: Yup.string().required(Check.require(Password)),
-  }),
+    }),
     onSubmit: async (values) => {
       setLoading(true);
       setErrorMsg("");
-    
+
       try {
         const response = await login(values.email, values.password);
-    
-        if (StatusMessage(response.StatusCodes)) {
+        console.log('response',response);
+        
+        if (StatusMessage(response.statusCode)) {
           toast.success(response.message);
-    
-          localStorage.setItem("token", response.token);
-    
+
+          localStorage.setItem("token", response.data);
+
           setTimeout(() => {
             setLoading(false);
             navigate("/dashboard");
           }, 1500);
         } else {
-          toast.error(response?.message );
+          if (response?.message) {
+            toast.error(response.message);
+          }
           setLoading(false);
         }
       } catch (error) {
         setLoading(false);
         setErrorMsg(error.message);
-    
+
         console.error("Login Error:", error.message);
-        toast.error(error?.message );
+
+        if (error?.message) {
+          toast.error(error.message);
+        }
       }
-    }    
+
+    }
 
   });
 
@@ -74,8 +82,8 @@ const Login = () => {
                 <Card className="mt-4">
                   <CardBody className="p-4">
                     <div className="text-center mt-2">
-                      <h5 className="text-primary">{Texts.Welcome_Back}</h5>
-                      <p className="text-muted">{Texts.Login_Message}</p>
+                      <h5 className="text-primary">{Texts.WelcomeBack}</h5>
+                      <p className="text-muted">{Texts.LoginMessage}</p>
                     </div>
 
                     {errorMsg && <Alert color="danger">{errorMsg}</Alert>}
@@ -94,18 +102,24 @@ const Login = () => {
                           required
                         />
 
-                        <BaseInput
-                          label={Password}
-                          type="password"
-                          name="password"
-                          placeholder={Placeholder(Password)}
-                          value={validation.values.password}
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          error={validation.touched.password && validation.errors.password}
-                          required
-                          passwordToggle
-                        />
+                
+                        <div className="mb-3">
+                        <Link to="/forgot-password" className="ms-2  float-end">Forgot Password?</Link>
+                          <div className="w-auto">
+                            <BaseInput
+                              label={Password}
+                              type={Password ? "text" : "password"}
+                              name="password"
+                              placeholder={Placeholder(Password)}
+                              value={validation.values.password || ""}
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              error={validation.touched.password && validation.errors.password}
+                              required
+                              passwordToggle
+                            />
+                          </div>
+                        </div>
 
                         <div className="mt-4">
                           <BaseButton
@@ -125,8 +139,8 @@ const Login = () => {
 
                 <div className="mt-4 text-center">
                   <p className="mb-0">
-                    {Texts.Signup_Redirect}{" "}
-                    <Link to="/register" className="fw-semibold text-primary text-decoration-underline">{Texts.Signup_Link}</Link>
+                    {Texts.SignupRedirect}{" "}
+                    <Link to="/register" className="fw-semibold text-primary text-decoration-underline">{Texts.SignupLink}</Link>
                   </p>
                 </div>
               </Col>

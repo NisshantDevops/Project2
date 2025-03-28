@@ -1,36 +1,35 @@
-import { token } from "../Components/Constant/Common";
-export const API_BASE_URL= process.env.REACT_APP_BASE_URL;
+import { token } from "../Components/Constants/Common";
+export const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 
-    const ApiService = {
+const ApiService = {
     async request(endpoint, method, body = null) {
-        try {
-
+    try {
         const headers = {
-            "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }),
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` } ),
         };
 
         const options = {
-            method,
-            headers,
+        method,
+        headers,
         };
 
         if (body) {
-            options.body = JSON.stringify(body);
+        options.body = JSON.stringify(body);
         }
 
         const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || "Request failed");
+        throw new Error(data.message);
         }
 
         return data;
-        } catch (error) {
+    } catch (error) {
         throw new Error(error.message);
-        }
+    }
     },
-    };
+};
 
-    export default ApiService;
+export default ApiService;
