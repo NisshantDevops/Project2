@@ -50,7 +50,7 @@ const Login = () => {
             navigate("/dashboard");
           }, 1500);
         } else {
-          toast.error(response?.message || "Login failed!");
+          toast.error(response?.message );
           setLoading(false);
         }
       } catch (error) {
@@ -58,7 +58,7 @@ const Login = () => {
         setErrorMsg(error.message);
     
         console.error("Login Error:", error.message);
-        toast.error(error?.message || "Something went wrong!");
+        toast.error(error?.message );
       }
     }    
 
@@ -74,8 +74,8 @@ const Login = () => {
                 <Card className="mt-4">
                   <CardBody className="p-4">
                     <div className="text-center mt-2">
-                      <h5 className="text-primary">{Texts.WELCOME_BACK}</h5>
-                      <p className="text-muted">{Texts.LOGIN_MESSAGE}</p>
+                      <h5 className="text-primary">{Texts.Welcome_Back}</h5>
+                      <p className="text-muted">{Texts.Login_Message}</p>
                     </div>
 
                     {errorMsg && <Alert color="danger">{errorMsg}</Alert>}
@@ -115,7 +115,7 @@ const Login = () => {
                             disabled={loading}
                             loader={loading}
                           >
-                            {Texts.SIGNIN}
+                            {Texts.SignIn}
                           </BaseButton>
                         </div>
                       </Form>
@@ -125,8 +125,8 @@ const Login = () => {
 
                 <div className="mt-4 text-center">
                   <p className="mb-0">
-                    {Texts.SIGNUP_REDIRECT}{" "}
-                    <Link to="/register" className="fw-semibold text-primary text-decoration-underline">{Texts.SIGNUP_LINK}</Link>
+                    {Texts.Signup_Redirect}{" "}
+                    <Link to="/register" className="fw-semibold text-primary text-decoration-underline">{Texts.Signup_Link}</Link>
                   </p>
                 </div>
               </Col>

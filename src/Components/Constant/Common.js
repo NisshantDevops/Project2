@@ -8,9 +8,9 @@ export const StatusMessage = (data) =>{
 }
 
 export const Texts = {
-    WELCOME_BACK: "Welcome Back!",
-    LOGIN_MESSAGE: "Sign in to continue to Velzon.",
-    SIGNUP_REDIRECT: "Don't have an account?",
-    SIGNUP_LINK: "Signup",
-    SIGNIN: "Sign In"
+    Welcome_Back: "Welcome Back!",
+    Login_Message: "Sign in to continue to Velzon.",
+    Signup_Redirect: "Don't have an account?",
+    Signup_Link: "Signup",
+    SignIn: "Sign In"
 };
