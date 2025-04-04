@@ -14,3 +14,17 @@ export const Texts = {
     Signup_Link: "Signup",
     SignIn: "Sign In"
 };
+
+export const Cats={
+ CateName:"category",
+ CateAdd:" Add Category",
+ CateResult:"result",
+ CateClose:"close",
+CateDelete:"delete",
+CateImage:"category Image",
+CateDescription:"Description",
+CateNa:"Category Name",
+CateShow:"Showing",
+CateProcessing:" Processing..."
+};
+export const BaseImage=process.env.REACT_APP_BASE_URL;
