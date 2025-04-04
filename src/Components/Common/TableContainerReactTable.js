@@ -13,7 +13,7 @@ import {
 
 import { rankItem } from '@tanstack/match-sorter-utils';
 
-// Column Filter
+
 const Filter = ({
   column,
   table
@@ -35,7 +35,7 @@ const Filter = ({
   );
 };
 
-// Global Filter
+
 const DebouncedInput = ({
   value: initialValue,
   onChange,
