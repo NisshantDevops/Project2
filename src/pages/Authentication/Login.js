@@ -45,7 +45,7 @@ const Login = () => {
                 if (StatusMessage(response.statusCode)) {
                     toast.success(response.message);
 
-                    localStorage.setItem("token", response.data);
+                    localStorage.setItem("token", response.data.token);
 
                     setTimeout(() => {
                         setLoading(false);
