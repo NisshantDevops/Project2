@@ -30,7 +30,7 @@ export const CATEGORY_COLUMNS = (handleSort, handleEditClick, handleDeleteClick)
         className="img-thumbnail onerror-img"
         onError={(e) => {
           if (e.target.src !== ImageError) {
-            e.target.src = ImageError; // Avoid infinite loop if ImageError fails
+            e.target.src = ImageError; 
           }
         }}
       />
