@@ -10,10 +10,6 @@ const NonAuthLayout = ({ children } ) => {
         (state ) => state.Layout.layoutModeType,
         (layoutModeType) => layoutModeType
         );
-        const mySelector = createSelector(
-            [(state) => state.categories],
-            (categories) => categories.slice() // Returning a new array reference
-          );
 
     const layoutModeType = useSelector(nonauthData);
 
