@@ -18,4 +18,6 @@ export const Texts = {
     ResetPassword: "Reset Password",
     ChangePassword: "Change Password",
     EnterPasswordDetails: "Enter Password Details",
+    Edit:"Edit",
+    Remove:"Remove",
 };

@@ -1,5 +1,6 @@
 import React from "react";
-import "./Pagination1.css";
+import "../../index.css";
+import { Cats } from "../Constant/Common";
 
 const Pagination = ({ totalPages, currentPage, setCurrentPage, onAddCategory }) => {
   if (totalPages <= 1) return null;
@@ -72,7 +73,7 @@ const Pagination = ({ totalPages, currentPage, setCurrentPage, onAddCategory }) 
   return (
     <div className="d-flex justify-content-between align-items-center">
       <button className="btn btn-primary" onClick={onAddCategory}>
-        Add Category
+        {Cats.CateAdd}
       </button>
       <ul className="pagination pagination-separated mb-0">
         <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
@@ -80,7 +81,7 @@ const Pagination = ({ totalPages, currentPage, setCurrentPage, onAddCategory }) 
             className={`page-link ${currentPage === 1 ? "disabled-link" : ""}`}
             onClick={() => currentPage !== 1 && handleClick(currentPage - 1)}
           >
-            Previous
+            {Cats.CatePrevious}
           </button>
         </li>
 
@@ -91,7 +92,7 @@ const Pagination = ({ totalPages, currentPage, setCurrentPage, onAddCategory }) 
             className={`page-link ${currentPage === totalPages ? "disabled-link" : ""}`}
             onClick={() => currentPage !== totalPages && handleClick(currentPage + 1)}
           >
-            Next
+            {Cats.CateNext}
           </button>
         </li>
       </ul>

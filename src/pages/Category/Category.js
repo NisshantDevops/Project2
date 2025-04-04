@@ -63,7 +63,7 @@ const Category = () => {
     setLoading(true);
     try {
       const response = await listCategory();
-      console.log("Full API response:", response); 
+      console.log("Full API response:", response);
 
       const data = response.data || response;
       const categoriesArray = data.categories || data;
@@ -148,7 +148,7 @@ const Category = () => {
       }
     } catch (err) {
       console.error("Upload error:", err);
-      toast.error(err.response?.data?.message );
+      toast.error(err.response?.data?.message);
       setErrors(prev => ({ ...prev, image: "Failed to upload image" }));
     } finally {
       setLoading(false);
@@ -197,8 +197,7 @@ const Category = () => {
         : await addCategory(payload);
 
       console.log("API Response:", response);
-      if (response?.success || StatusMessage(response?.statusCode))
-      {
+      if (response?.success || StatusMessage(response?.statusCode)) {
         toast.success(
           isEditMode ? "Category updated successfully!" : "Category added successfully!"
         );
@@ -206,7 +205,7 @@ const Category = () => {
         await loadCategories();
         resetForm();
       } else {
-        throw new Error(response?.message );
+        throw new Error(response?.message);
       }
     } catch (err) {
       console.error("Detailed Error:", {
@@ -214,7 +213,7 @@ const Category = () => {
         response: err.response?.data,
       });
       toast.error(
-        err.response?.data?.message || err.message 
+        err.response?.data?.message || err.message
       );
     } finally {
       setLoading(false);
@@ -270,7 +269,7 @@ const Category = () => {
       const isSuccess = StatusMessage(response?.statusCode);
       console.log("if:", response);
       if (isSuccess) {
-        toast.success(response?.message );
+        toast.success(response?.message);
         await loadCategories();
       }
     } catch (err) {
@@ -278,7 +277,7 @@ const Category = () => {
       toast.error(
         err.response?.data?.message ||
         err.response?.data?.error ||
-        err.message 
+        err.message
       );
     } finally {
       setLoading(false);

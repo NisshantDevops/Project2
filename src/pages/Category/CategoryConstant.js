@@ -1,6 +1,6 @@
 import ImageError from "../../assets/images/auth-one-bg.jpg";
-import "./Category.css";
-
+import { Texts } from "../../Components/Constants/Common";
+import "../../index.css"
 export const CATEGORY_COLUMNS = (handleSort, handleEditClick, handleDeleteClick) => [
   {
     key: "id",
@@ -46,14 +46,14 @@ export const CATEGORY_COLUMNS = (handleSort, handleEditClick, handleDeleteClick)
           onClick={() => handleEditClick?.(row)}
           aria-label="Edit category"
         >
-          Edit
+          {Texts.Edit}
         </button>
         <button
           className="btn btn-sm btn-danger remove-item-btn"
           onClick={() => handleDeleteClick?.(row)}
           aria-label="Remove category"
         >
-          Remove
+          {Texts.Remove}
         </button>
       </div>
     ),

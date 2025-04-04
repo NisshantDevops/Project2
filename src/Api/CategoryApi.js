@@ -12,8 +12,7 @@ import ApiService from "./ApiService";
 export const FileUpload = async (formData) => {
     try {
       const response = await axios.post(
-        'https://e-commerce-gg46.onrender.com/api/fileUpload',
-        
+        'https://e-commerce-gg46.onrender.com/api/fileUpload', 
         formData,
         {
           headers: {
@@ -27,11 +26,6 @@ export const FileUpload = async (formData) => {
       throw err;
     }
   };
-
-
-
-
-
 export const addCategory = async (payload) => {
   console.log('res res', payload);
   const res = await ApiService.request(AddCategoryRoute, "POST", payload);
@@ -41,8 +35,6 @@ export const fetchCategories = async (id = "") => {
   console.log("enter id:", Category.id);
   return await ApiService.request(`${FetchCategoryRoute}/${id}`, "GET");
  };
-
-
 export const updateCategory = async (id, payload) => {
   return await ApiService.request(`${UpdateCategoryRoute}/${id}`, "PUT", payload);
 };
@@ -52,7 +44,5 @@ export const listCategory = async (payload = {}) => {
 export const deleteCategory = async (id) => {
   return await ApiService.request(`${DeleteCategoryRoute}/${id}`, "DELETE");
 };
-
-
 
 export default FileUpload;

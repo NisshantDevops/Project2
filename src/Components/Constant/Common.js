@@ -25,6 +25,8 @@ CateImage:"category Image",
 CateDescription:"Description",
 CateNa:"Category Name",
 CateShow:"Showing",
-CateProcessing:" Processing..."
+CateProcessing:" Processing...",
+CatePrevious:"Previous",
+CateNext:"Next"
 };
 export const BaseImage=process.env.REACT_APP_BASE_URL;
