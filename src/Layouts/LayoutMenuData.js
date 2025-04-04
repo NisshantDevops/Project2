@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../assets/scss/themes.scss";
+import "../assets/scss/themes.scss"
 
 const Navdata = () => {
   const history = useNavigate();
   //state data
   const [isDashboard, setIsDashboard] = useState(false);
   const [isApps, setIsApps] = useState(false);
-  const [isCategory, setIsCategory] = useState(false);
-  const [isReports, setIsReports] = useState(false);
-  const [isProducts, setIsProducts] = useState(false);
+
+
 
   const [iscurrentState, setIscurrentState] = useState("Dashboard");
 
@@ -35,23 +34,13 @@ const Navdata = () => {
     if (iscurrentState !== "Apps") {
       setIsApps(false);
     }
-    if (iscurrentState !== "Category") {
-      setIsCategory(false);
-    }
-    if (iscurrentState !== "Reports") {
-      setIsReports(false);
-    }
-    if (iscurrentState !== "Products") {
-      setIsProducts(false);
-    }
+   
   }, [
     history,
     iscurrentState,
     isDashboard,
     isApps,
-    isCategory,
-    isReports,
-    isProducts,
+   
   ]);
 
   const menuItems = [
@@ -65,46 +54,6 @@ const Navdata = () => {
         e.preventDefault();
         setIsDashboard(!isDashboard);
         setIscurrentState("Dashboard");
-        updateIconSidebar(e);
-      },
-    },
-    {
-      id: "category",
-      label: "Category",
-      icon: "ri-folder-line",
-      link: "/category",
-      stateVariables: isCategory,
-      click: function (e) {
-        e.preventDefault();
-        setIsCategory(!isCategory);
-        setIscurrentState("Category");
-        updateIconSidebar(e);
-      },
-    },
- 
-    {
-      id: "products",
-      label: "Products",
-      icon: "ri-shopping-bag-line",
-      link: "/products",
-      stateVariables: isProducts,
-      click: function (e) {
-        e.preventDefault();
-        setIsProducts(!isProducts);
-        setIscurrentState("Products");
-        updateIconSidebar(e);
-      },
-    },
-    {
-      id: "reports",
-      label: "Reports",
-      icon: "ri-file-chart-line",
-      link: "/reports",
-      stateVariables: isReports,
-      click: function (e) {
-        e.preventDefault();
-        setIsReports(!isReports);
-        setIscurrentState("Reports");
         updateIconSidebar(e);
       },
     },
