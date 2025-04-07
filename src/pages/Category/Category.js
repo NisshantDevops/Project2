@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useRef } from 'react';
 import { Form } from "reactstrap";
+import { Formik, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,7 +16,7 @@ import {
   Input,
 } from "reactstrap";
 import Layout from "../../Layouts/index";
-import { addCategory, updateCategory, deleteCategory, listCategory,FileUpload } from "../../Api/CategoryApi";
+import { addCategory, updateCategory, deleteCategory, listCategory, FileUpload } from "../../Api/CategoryApi";
 import { toast } from "react-toastify";
 import Pagination from "../../Components/Common/Pagination";
 import RowsPerPage from "../../Components/Common/RowsPerPage";
@@ -35,6 +37,7 @@ import { Texts } from "../../Components/Constants/Common";
 import BaseInput from "../../Components/Base/Input";
 import BaseButton from "../../Components/Base/Button";
 
+
 const Category = () => {
 
   const [categories, setCategories] = useState([]);
@@ -43,8 +46,8 @@ const Category = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
-  const [modal_list, setmodal_list] = useState(false);
-  const [modal_delete, setmodal_delete] = useState(false);
+  const [modallist, setmodallist] = useState(false);
+  const [modaldelete, setmodaldelete] = useState(false);
   const [category, setCategory] = useState({
     id: "",
     name: "",
@@ -57,14 +60,9 @@ const Category = () => {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
   const [categoryImage, setCategoryImage] = useState("");
+  const formikRef = useRef(null);
 
-
-
-
-
-document.title = PAGE_TITLE;
-
-
+  document.title = PAGE_TITLE;
   const loadCategories = useCallback(async () => {
     setLoading(true);
     try {
@@ -75,11 +73,11 @@ document.title = PAGE_TITLE;
       if (Array.isArray(categoriesArray)) {
         setCategories(categoriesArray);
       } else {
-        toast.error("Invalid categories data format");
+        toast.error(StatusMessage);
       }
     } catch (error) {
-    
-      toast.error("Failed to load categories");
+
+      toast.error(StatusMessage);
     } finally {
       setLoading(false);
     }
@@ -89,23 +87,21 @@ document.title = PAGE_TITLE;
     loadCategories();
   }, [loadCategories]);
 
-
   const handleImageError = (event) => {
     event.target.onerror = null;
-    event.target.src = "default-image-path.jpg";
+    event.target.src = "/assets/images/default-image.jpg";
   };
 
-  const validateFields = () => {
-    let newErrors = {};
-    if (!category.name) newErrors.name = "Name is required.";
-    if (!category.description) newErrors.description = "Description is required.";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const categorySchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    description: Yup.string().required('Description is required'),
+    image: Yup.mixed().required('Image is required'),
+  });
+
 
   const tog_list = () => {
-    setmodal_list(!modal_list);
-    if (!modal_list) {
+    setmodallist(!modallist);
+    if (!modallist) {
       setIsEditMode(false);
       setCategory({ id: "", name: "", description: "", image: null });
       setPreview(null);
@@ -114,7 +110,7 @@ document.title = PAGE_TITLE;
   };
 
   const tog_delete = () => {
-    setmodal_delete(!modal_delete);
+    setmodaldelete(!modaldelete);
   };
 
 
@@ -148,17 +144,25 @@ document.title = PAGE_TITLE;
         }));
         setPreview(URL.createObjectURL(file));
         setErrors(prev => ({ ...prev, image: '' }));
-        toast.success("Image uploaded successfully");
+        toast.success(StatusMessage);
       }
     } catch (err) {
-      console.error("Upload error:", err);
       toast.error(err.response?.data?.message);
       setErrors(prev => ({ ...prev, image: "Failed to upload image" }));
     } finally {
       setLoading(false);
     }
   };
-
+  const handleImagePreview = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   const handleCancelImage = () => {
     setCategory({ ...category, image: null });
     setPreview(null);
@@ -180,7 +184,7 @@ document.title = PAGE_TITLE;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateFields()) return;
+    if (!categorySchema()) return;
 
     try {
       setLoading(true);
@@ -195,12 +199,12 @@ document.title = PAGE_TITLE;
       } else {
         payload.category_image = categoryImage;
       }
-      console.log("Final Payload:", payload);
+    
       const response = isEditMode
         ? await updateCategory(category.id, payload)
         : await addCategory(payload);
 
-      console.log("API Response:", response);
+     
       if (response?.success || StatusMessage(response?.statusCode)) {
         tog_list();
         await loadCategories();
@@ -224,7 +228,7 @@ document.title = PAGE_TITLE;
 
 
   const handleEditClick = (categories) => {
-    console.log("Original category data:", categories);
+
     setCategory({
       id: categories.id,
       name: categories.category_name || categories.name,
@@ -238,27 +242,26 @@ document.title = PAGE_TITLE;
       setCategoryImage(imgSrc);
     }
 
-    setmodal_list(true);
+    setmodallist(true);
   };
 
 
   const handleDeleteClick = (category) => {
-    console.log("Category object received:", category);
     if (!category?.id) {
       console.error("Category ID is missing in:", category);
-      toast.error("Cannot delete - missing category ID");
+      toast.error(StatusMessage);
       return;
     }
     setCategoryToDelete(category);
-    setmodal_delete(true);
+    setmodaldelete(true);
   };
 
 
 
   const confirmDelete = async () => {
     if (!categoryToDelete?.id) {
-      toast.error("No valid category selected for deletion");
-      setmodal_delete(false);
+      toast.error(StatusMessage);
+      setmodaldelete(false);
       setCategoryToDelete(null);
       return;
     }
@@ -268,10 +271,12 @@ document.title = PAGE_TITLE;
 
       const response = await deleteCategory(categoryToDelete.id);
       const isSuccess = StatusMessage(response?.statusCode);
-      console.log("if:", response);
+
       if (isSuccess) {
         toast.success(response?.message);
-        await loadCategories();
+        if (response.data?.deletedId === categoryToDelete.id) {
+          await loadCategories();
+        }
       }
     } catch (err) {
       console.error("Delete error:", err.response?.data || err);
@@ -282,7 +287,7 @@ document.title = PAGE_TITLE;
       );
     } finally {
       setLoading(false);
-      setmodal_delete(false);
+      setmodaldelete(false);
       setCategoryToDelete(null);
     }
   };
@@ -346,7 +351,7 @@ document.title = PAGE_TITLE;
                           <h5 className="card-title mb-0 fs-3">{Cats.CateName}</h5>
                         </Col>
                         <Col className="d-flex justify-content-sm-end">
-                          <Button
+                          <BaseButton
                             color="success"
                             className="add-btn me-1"
                             onClick={tog_list}
@@ -354,7 +359,7 @@ document.title = PAGE_TITLE;
                           >
                             <i className="ri-add-line align-bottom me-1"></i>
                             {Cats.CateAdd}
-                          </Button>
+                          </BaseButton>
                         </Col>
                       </Row>
                     </CardHeader>
@@ -370,10 +375,10 @@ document.title = PAGE_TITLE;
                           <Col className="col-sm">
                             <div className="d-flex justify-content-sm-end">
                               <div className="search-box ms-2">
-                                <input
+                                <BaseInput
                                   type="text"
                                   className="form-control search"
-                                  placeholder="Ten.search"
+                                  placeholder={Ten.Search}
                                   value={searchTerm}
                                   onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -415,9 +420,9 @@ document.title = PAGE_TITLE;
         )}
 
         <CommonModal
-          isOpen={modal_list}
+          isOpen={modallist}
           toggle={tog_list}
-          title={category?.id ? Texts.AddCategory : Texts.UpdateCategory}
+          title={category?.id ? Texts.UpdateCategory : Texts.AddCategory}
           footerButtons={
             <>
               <BaseButton color="light" onClick={tog_list}>
@@ -438,79 +443,101 @@ document.title = PAGE_TITLE;
             </>
           }
         >
-          <Form className="tablelist-form" onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <Label htmlFor="categoryName" className="form-label text-start w-100">
-                {Cats.CateNa} <span className="text-danger">*</span>
-              </Label>
-              <BaseInput
-                type="text"
-                id="categoryName"
-                className="form-control"
-                placeholder="Enter Category Name"
-                name="name"
-                value={category.name}
-                onChange={handleChange}
-                invalid={!!errors.name}
-              />
-              {errors.name && (
-                <div className="text-danger small">{errors.name}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <Label htmlFor="categoryDescription" className="form-label text-start w-100">
-                {Cats.CateDescription} <span className="text-danger">*</span>
-              </Label>
-              <BaseInput
-                type="textarea"
-                id="categoryDescription"
-                className="form-control"
-                placeholder="Enter Description"
-                name="description"
-                value={category.description}
-                onChange={handleChange}
-                invalid={!!errors.description}
-              />
-              {errors.description && (
-                <div className="text-danger small">{errors.description}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <Label htmlFor="categoryImage" className="form-label text-start w-100">
-                {Cats.CateImage} <span className="text-danger">*</span>
-              </Label>
-              <BaseInput
-                type="file"
-                id="categoryImage"
-                className="mb-2"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              {errors.image && (
-                <div className="text-danger small">{errors.image}</div>
-              )}
-              {preview && (
-                <div className="img-preview">
-                  <img src={preview} alt="Preview" className="preview-img" />
-                  <div style={{ marginTop: "5px" }}>
-                    <BaseButton
-                      color="danger"
-                      size="sm"
-                      onClick={handleCancelImage}
-                    >
-                      {Cats.CateDelete}
-                    </BaseButton>
-                  </div>
+          <Formik
+            innerRef={(ref) => (formikRef = ref)}
+            initialValues={{
+              name: category?.name || "",
+              description: category?.description || "",
+              image: null,
+            }}
+            validationSchema={categorySchema}
+            onSubmit={(values) => handleSubmit(values)}
+          >
+            {({ setFieldValue, values, errors, touched }) => (
+              <Form className="tablelist-form">
+                {/* Name */}
+                <div className="mb-3">
+                  <Label htmlFor="name" className="form-label text-start w-100">
+                    {Cats.CateNa} <span className="text-danger">*</span>
+                  </Label>
+                  <Field
+                    as={BaseInput}
+                    type={Ten.Type}
+                    id={Ten.Id}
+                    className={Ten.ClassName}
+                    placeholder={Ten.Placeholder}
+                    name="name"
+                    invalid={touched.name && !!errors.name}
+                  />
+                  <ErrorMessage
+                    name={Ten.Nam}
+                    component={Ten.Ent}
+                    className="text-danger small"
+                  />
                 </div>
-              )}
-            </div>
-          </Form>
+
+
+                <div className="mb-3">
+                  <Label htmlFor="description" className="form-label text-start w-100">
+                    {Cats.CateDescription} <span className="text-danger">*</span>
+                  </Label>
+                  <Field
+                    as={BaseInput}
+                    type={Ten.Tex}
+                    id={Ten.Idd}
+                    className={Ten.ClassName}
+                    placeholder={Ten.Paceholder}
+                    name="description"
+                    invalid={touched.description && !!errors.description}
+                  />
+                  <ErrorMessage
+                    name={Ten.Ye}
+                    component={Ten.Ent}
+                    className="text-danger small"
+                  />
+                </div>
+                <div className="mb-3">
+                  <Label htmlFor="image" className="form-label text-start w-100">
+                    {Cats.CateImage} <span className="text-danger">*</span>
+                  </Label>
+                  <BaseInput
+                    type="file"
+                    id={Ten.Yo}
+                    className="mb-2"
+                    accept="image/*"
+                    onChange={(event) => {
+                      setFieldValue("image", event.currentTarget.files[0]);
+                      handleImagePreview(event);
+                    }}
+                  />
+                  {touched.image && errors.image && (
+                    <div className="text-danger small">{errors.image}</div>
+                  )}
+                  {preview && (
+                    <div className="img-preview">
+                      <img src={preview} alt="Preview" className="preview-img" />
+                      <div style={{ marginTop: "5px" }}>
+                        <BaseButton
+                          color="danger"
+                          size="sm"
+                          onClick={() => {
+                            setFieldValue("image", null);
+                            handleCancelImage();
+                          }}
+                        >
+                          {Cats.CateDelete}
+                        </BaseButton>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Form>
+            )}
+          </Formik>
         </CommonModal>
 
         <CommonDeleteModal
-          isOpen={modal_delete}
+          isOpen={modaldelete}
           toggle={tog_delete}
           message={MESSAGE}
           confirmDelete={confirmDelete}

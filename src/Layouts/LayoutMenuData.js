@@ -30,19 +30,19 @@ const Navdata = () => {
 
   useEffect(() => {
     document.body.classList.remove("twocolumn-panel");
-    if (iscurrentState !== "{Ten.Dashboard}") {
+    if (iscurrentState !== Ten.Dashboard) {
       setIsDashboard(false);
     }
-    if (iscurrentState !== "{Ten.Apps}") {
+    if (iscurrentState !== Ten.Apps) {
       setIsApps(false);
     }
-    if (iscurrentState !== "{Ten.Category}") {
+    if (iscurrentState !== Ten.Category) {
       setIsCategory(false);
     }
-    if (iscurrentState !== "{Ten.Reports}") {
+    if (iscurrentState !== Ten.Reports) {
       setIsReports(false);
     }
-    if (iscurrentState !== "{Ten.Prodcuts}") {
+    if (iscurrentState !== Ten.Prodcuts) {
       setIsProducts(false);
     }
   }, [

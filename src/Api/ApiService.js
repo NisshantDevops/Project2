@@ -2,78 +2,70 @@ import axios from "axios";
 import { token } from "../Components/Constants/Common";
 import { FileUpload } from "./ApiRoutes";
 export const API_BASE_URL = process.env.REACT_APP_BASE_URL;
-
-
 const ApiService = {
-    async request(endpoint, method, body = null) {
-      try {
-        const token = localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        };
-  
-        const options = {
-          method,
-          headers,
-          ...(body && { body: JSON.stringify(body) })
-        };
-  
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-        const data = await response.json();
-  
-        if (!response.ok) {
-          throw new Error(data.message );
-        }
-  
-        return data;
-      } catch (error) {
-        console.error(`API Error (${method} ${endpoint}):`, error);
-        throw new Error(error.message );
+  async request(endpoint, method, body = null) {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+      };
+
+      const options = {
+        method,
+        headers,
+        ...(body && { body: JSON.stringify(body) })
+      };
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message);
       }
-    },
-  
-    async FileUpload(formData) {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.post(
-          `${API_BASE_URL}/fileUpload`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              ...(token && { Authorization: `Bearer ${token}` })
-            }
-          }
-        );
-        return response.data;
-      } catch (error) {
-        console.error("File upload error:", error);
-        throw new Error(error.response?.data?.message );
-      }
-    },
-  
-  
-    async getCategories() {
-      return this.request("/categories", "GET");
-    },
-  
-    async getCategoryById(categoryId) {
-      return this.request(`/categories/${categoryId}`, "GET");
-    },
-  
-    async addCategory(categoryData) {
-      return this.request("/categories", "POST", categoryData);
-    },
-  
-    async updateCategory(categoryId, categoryData) {
-      return this.request(`/categories/${categoryId}`, "PUT", categoryData);
-    },
-  
-    async deleteCategory(categoryId) {
-      return this.request(`/categories/${categoryId}`, "DELETE");
+
+      return data;
+    } catch (error) {
+      console.error(`API Error (${method} ${endpoint}):`, error);
+      throw new Error(error.message);
     }
-  };
-  
-   
+  },
+
+  async FileUpload(formData) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `${API_BASE_URL}/fileUpload`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            ...(token && { Authorization: `Bearer ${token}` })
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("File upload error:", error);
+      throw new Error(error.response?.data?.message);
+    }
+  },
+  async getCategoryById(categoryId) {
+    return this.request(`/categories/${categoryId}`, "GET");
+  },
+
+  async addCategory(categoryData) {
+    return this.request("/categories", "POST", categoryData);
+  },
+
+  async updateCategory(categoryId, categoryData) {
+    return this.request(`/categories/${categoryId}`, "PUT", categoryData);
+  },
+
+  async deleteCategory(categoryId) {
+    return this.request(`/categories/${categoryId}`, "DELETE");
+  }
+};
+
+
 export default ApiService;
