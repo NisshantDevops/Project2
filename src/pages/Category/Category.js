@@ -199,12 +199,12 @@ const Category = () => {
       } else {
         payload.category_image = categoryImage;
       }
-    
+
       const response = isEditMode
         ? await updateCategory(category.id, payload)
         : await addCategory(payload);
 
-     
+
       if (response?.success || StatusMessage(response?.statusCode)) {
         tog_list();
         await loadCategories();
@@ -455,7 +455,7 @@ const Category = () => {
           >
             {({ setFieldValue, values, errors, touched }) => (
               <Form className="tablelist-form">
-                {/* Name */}
+
                 <div className="mb-3">
                   <Label htmlFor="name" className="form-label text-start w-100">
                     {Cats.CateNa} <span className="text-danger">*</span>
@@ -477,32 +477,30 @@ const Category = () => {
                 </div>
 
 
+
                 <div className="mb-3">
-                  <Label htmlFor="description" className="form-label text-start w-100">
-                    {Cats.CateDescription} <span className="text-danger">*</span>
-                  </Label>
-                  <Field
-                    as={BaseInput}
-                    type={Ten.Tex}
-                    id={Ten.Idd}
-                    className={Ten.ClassName}
-                    placeholder={Ten.Paceholder}
+                  <BaseInput
+                    type="textarea"
+                    id="description"
+                    label={`${Cats.CateDescription} *`}
+                    className="form-control"
+                    placeholder="Enter description"
                     name="description"
                     invalid={touched.description && !!errors.description}
+                    value={values.description}
+                    onChange={(e) => setFieldValue("description", e.target.value)}
+
                   />
-                  <ErrorMessage
-                    name={Ten.Ye}
-                    component={Ten.Ent}
-                    className="text-danger small"
-                  />
+                  {touched.description && errors.description && (
+                    <div className="text-danger small">{errors.description}</div>
+                  )}
                 </div>
+
                 <div className="mb-3">
-                  <Label htmlFor="image" className="form-label text-start w-100">
-                    {Cats.CateImage} <span className="text-danger">*</span>
-                  </Label>
                   <BaseInput
                     type="file"
-                    id={Ten.Yo}
+                    id="image"
+                    label={`${Cats.CateImage} *`}
                     className="mb-2"
                     accept="image/*"
                     onChange={(event) => {
