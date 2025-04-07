@@ -14,7 +14,7 @@ import {
   Input,
 } from "reactstrap";
 import Layout from "../../Layouts/index";
-import { addCategory, updateCategory, deleteCategory, listCategory, FileUpload } from "../../Api/CategoryApi";
+import { addCategory, updateCategory, deleteCategory, listCategory,FileUpload } from "../../Api/CategoryApi";
 import { toast } from "react-toastify";
 import Pagination from "../../Components/Common/Pagination";
 import RowsPerPage from "../../Components/Common/RowsPerPage";
@@ -27,8 +27,13 @@ import { Cats } from "../../Components/Constant/Common";
 import moment from "moment";
 import { StatusCodes } from "http-status-codes";
 import { StatusMessage } from "../../Components/Constants/Common";
-
-const MESSAGE = "Are you Sure You want to Remove this Record?";
+import { MESSAGE } from "../../Components/Constants/Common";
+import ApiService from "../../Api/ApiService";
+import { PAGE_TITLE } from "../../Components/Constants/Common";
+import { Ten } from "../../Components/Constants/Common";
+import { Texts } from "../../Components/Constants/Common";
+import BaseInput from "../../Components/Base/Input";
+import BaseButton from "../../Components/Base/Button";
 
 const Category = () => {
 
@@ -54,17 +59,16 @@ const Category = () => {
   const [categoryImage, setCategoryImage] = useState("");
 
 
-  useEffect(() => {
-    document.title = "Category";
-  }, []);
+
+
+
+document.title = PAGE_TITLE;
 
 
   const loadCategories = useCallback(async () => {
     setLoading(true);
     try {
       const response = await listCategory();
-      console.log("Full API response:", response);
-
       const data = response.data || response;
       const categoriesArray = data.categories || data;
 
@@ -74,7 +78,7 @@ const Category = () => {
         toast.error("Invalid categories data format");
       }
     } catch (error) {
-      console.error("Error:", error);
+    
       toast.error("Failed to load categories");
     } finally {
       setLoading(false);
@@ -198,9 +202,6 @@ const Category = () => {
 
       console.log("API Response:", response);
       if (response?.success || StatusMessage(response?.statusCode)) {
-        toast.success(
-          isEditMode ? "Category updated successfully!" : "Category added successfully!"
-        );
         tog_list();
         await loadCategories();
         resetForm();
@@ -372,7 +373,7 @@ const Category = () => {
                                 <input
                                   type="text"
                                   className="form-control search"
-                                  placeholder="Search..."
+                                  placeholder="Ten.search"
                                   value={searchTerm}
                                   onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -416,13 +417,13 @@ const Category = () => {
         <CommonModal
           isOpen={modal_list}
           toggle={tog_list}
-          title={category?.id ? "Edit Category" : "Add Category"}
+          title={category?.id ? Texts.AddCategory : Texts.UpdateCategory}
           footerButtons={
             <>
-              <Button color="light" onClick={tog_list}>
+              <BaseButton color="light" onClick={tog_list}>
                 {Cats.CateResult}
-              </Button>
-              <Button
+              </BaseButton>
+              <BaseButton
                 color="success"
                 onClick={handleSubmit}
                 disabled={loading}
@@ -432,8 +433,8 @@ const Category = () => {
                     <span className="spinner-border spinner-border-sm me-1"></span>
                     {Cats.CateProcessing}
                   </>
-                ) : category?.id ? "Update" : "Add"}
-              </Button>
+                ) : category?.id ? Texts.Update : Texts.Add}
+              </BaseButton>
             </>
           }
         >
@@ -442,7 +443,7 @@ const Category = () => {
               <Label htmlFor="categoryName" className="form-label text-start w-100">
                 {Cats.CateNa} <span className="text-danger">*</span>
               </Label>
-              <Input
+              <BaseInput
                 type="text"
                 id="categoryName"
                 className="form-control"
@@ -461,7 +462,7 @@ const Category = () => {
               <Label htmlFor="categoryDescription" className="form-label text-start w-100">
                 {Cats.CateDescription} <span className="text-danger">*</span>
               </Label>
-              <Input
+              <BaseInput
                 type="textarea"
                 id="categoryDescription"
                 className="form-control"
@@ -480,7 +481,7 @@ const Category = () => {
               <Label htmlFor="categoryImage" className="form-label text-start w-100">
                 {Cats.CateImage} <span className="text-danger">*</span>
               </Label>
-              <Input
+              <BaseInput
                 type="file"
                 id="categoryImage"
                 className="mb-2"
@@ -494,13 +495,13 @@ const Category = () => {
                 <div className="img-preview">
                   <img src={preview} alt="Preview" className="preview-img" />
                   <div style={{ marginTop: "5px" }}>
-                    <Button
+                    <BaseButton
                       color="danger"
                       size="sm"
                       onClick={handleCancelImage}
                     >
                       {Cats.CateDelete}
-                    </Button>
+                    </BaseButton>
                   </div>
                 </div>
               )}

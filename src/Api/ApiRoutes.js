@@ -6,5 +6,5 @@ export const FetchCategoryRoute = "category/viewCategory";
 export const UpdateCategoryRoute = "category/updateCategory";
 export const AddCategoryRoute = "category/addCategory";
 export const DeleteCategoryRoute = "category/deleteCategory";
-export const FileUpload="fileupload";
+export const FileUploadRoute="fileupload";
 export const ListCategoryRoute="category/listofcategories";

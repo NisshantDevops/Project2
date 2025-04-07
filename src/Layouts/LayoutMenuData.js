@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/scss/themes.scss";
+import { Ten } from "../Components/Constants/Common";
 
 const Navdata = () => {
   const history = useNavigate();
@@ -29,19 +30,19 @@ const Navdata = () => {
 
   useEffect(() => {
     document.body.classList.remove("twocolumn-panel");
-    if (iscurrentState !== "Dashboard") {
+    if (iscurrentState !== "{Ten.Dashboard}") {
       setIsDashboard(false);
     }
-    if (iscurrentState !== "Apps") {
+    if (iscurrentState !== "{Ten.Apps}") {
       setIsApps(false);
     }
-    if (iscurrentState !== "Category") {
+    if (iscurrentState !== "{Ten.Category}") {
       setIsCategory(false);
     }
-    if (iscurrentState !== "Reports") {
+    if (iscurrentState !== "{Ten.Reports}") {
       setIsReports(false);
     }
-    if (iscurrentState !== "Products") {
+    if (iscurrentState !== "{Ten.Prodcuts}") {
       setIsProducts(false);
     }
   }, [

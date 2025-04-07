@@ -20,4 +20,20 @@ export const Texts = {
     EnterPasswordDetails: "Enter Password Details",
     Edit:"Edit",
     Remove:"Remove",
+    FormData:"Formdata",
+    AddCategory:"Add category",
+    UpdateCategory:"Update category",
+    Update:"Update",
+    Add:"Add"
 };
+
+export const Ten={
+    Dashboard:"Dashboard",
+    Apps:"Apps",
+    Category:"Category",
+    Reports:"Reports",
+    Products:"Products",
+    Search:"Search..."
+};
+export const MESSAGE = "Are you Sure You want to Remove this Record?";
+ export const PAGE_TITLE = "Category";

@@ -17,7 +17,7 @@ const handleFileUpload = async (file) => {
 
     try {
         const response = await FileUpload(formData);
-        console.log('File uploaded successfully:', response);
+        // console.log('File uploaded successfully:', response);
     } catch (error) {
         console.error('Error uploading file:', error);
     }

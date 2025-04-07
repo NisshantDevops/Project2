@@ -29,4 +29,3 @@ CateProcessing:" Processing...",
 CatePrevious:"Previous",
 CateNext:"Next"
 };
-export const BaseImage=process.env.REACT_APP_BASE_URL;

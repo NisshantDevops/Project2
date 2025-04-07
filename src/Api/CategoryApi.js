@@ -5,26 +5,13 @@ import {
   AddCategoryRoute, 
   DeleteCategoryRoute, 
   UpdateCategoryRoute,
-  ListCategoryRoute
+  ListCategoryRoute,
+  FileUploadRoute
 } from "./ApiRoutes";
 import ApiService from "./ApiService";
 
 export const FileUpload = async (formData) => {
-    try {
-      const response = await axios.post(
-        'https://e-commerce-gg46.onrender.com/api/fileUpload', 
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      return response;
-    } catch (err) {
-      console.error("File upload error:", err);
-      throw err;
-    }
+   return await ApiService.request(FileUploadRoute,"POST",formData)
   };
 export const addCategory = async (payload) => {
   console.log('res res', payload);
@@ -44,5 +31,6 @@ export const listCategory = async (payload = {}) => {
 export const deleteCategory = async (id) => {
   return await ApiService.request(`${DeleteCategoryRoute}/${id}`, "DELETE");
 };
+ 
 
 export default FileUpload;
