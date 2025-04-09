@@ -1,0 +1,285 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { Card, Spinner, Row, Col, Form as BForm, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { ProductApi } from '../../Api/ProductApi';
+import { addCategory } from '../../Api/CategoryApi';
+import Layout from '../../Layouts/index';
+import { StatusMessage, Ten } from '../../Components/Constants/Common';
+import { ADDP } from '../../Components/Constants/Common';
+import BaseButton from "../../Components/Base/Button"
+
+const ProductForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+  const isEditMode = !!id || location.state?.isEditMode;
+  const productData = location.state?.productData || null;
+
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      name: '',
+      price: '',
+      description: '',
+      color: '',
+      size: '',
+      quantity: '',
+      image: null,
+      category_id: '',
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('Product name is required'),
+      price: Yup.number().typeError('Price must be a number').required('Price is required').positive('Price must be positive'),
+      description: Yup.string(),
+      category_id: Yup.string().required('Category is required'),
+      image: Yup.mixed().test('fileSize', 'File too large (max 2MB)', (value) => {
+        if (!value) return !isEditMode;
+        return value.size <= 2000000;
+      }).test('fileType', 'Unsupported file format (JPEG/PNG only)', (value) => {
+        if (!value) return !isEditMode;
+        return ['image/jpeg', 'image/png'].includes(value.type);
+      }),
+    }),
+    
+
+    onSubmit: async (values) => {
+      try {
+        setLoading(true);
+    
+        if (!values.name?.trim()) {
+          toast.error(StatusMessage);
+          return;
+        }
+    
+        if (!values.category_id || isNaN(values.category_id)) {
+          toast.error(StatusMessage);
+          return;
+        }
+    
+        const payload = {
+          name: values.name.trim(),
+          category_id: Number(values.category_id),
+          product_variants: [
+            {
+              product_title_name: values.name.trim(),
+              description: values.description || '',
+              color: values.color || 'Black',
+              size: values.size || '128GB',
+              price: Number(values.price || 0),
+              quantity: Number(values.quantity || 1),
+              variant_image: {
+                image_path: values.image?.name || 'default.png',
+              },
+            },
+          ],
+        };
+    
+       
+    
+        let response;
+        if (isEditMode) {
+          const productId = id || productData?.id;
+          response = await ProductApi.updateProduct(productId, payload);
+          toast.success(response.data?.statusMessage );
+        } else {
+          response = await ProductApi.addProduct(payload);
+          toast.success(response.data?.statusMessage );
+        }
+    
+        navigate('/products');
+      } catch (error) {
+        console.error('Product save failed:', error.response?.data || error.message);
+        toast.error(error.response?.data?.message?.[0] );
+      } finally {
+        setLoading(false);
+      }
+    },
+  
+    
+    
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isEditMode) {
+        setLoading(true);
+        try {
+          let data;
+          if (id) {
+
+            data = await ProductApi.getProduct(id);
+          } else if (productData) {
+
+            data = productData;
+          }
+
+          if (data) {
+            const variant = data.product_variants?.[0] || {};
+            formik.setValues({
+              name: data.name || '',
+              price: variant.price || '',
+              description: variant.description || '',
+              color: variant.color || '',
+              size: variant.size || '',
+              quantity: variant.quantity || '',
+              image: null,  
+              category_id: String(data.category_id || ''),
+            });
+
+            if (variant?.variant_image?.image_path) {
+              setImagePreview(`${process.env.REACT_APP_BASE_URL}${variant.variant_image.image_path}`);
+            }
+          }
+        } catch (err) {
+          toast.error(StatusMessage);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+  }, [id, isEditMode]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      formik.setFieldValue('image', file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  return (
+    <Layout>
+      <div className="page-content">
+        <div className="container-fluid">
+          <Card>
+            <Card.Header>
+              <h5>{isEditMode ? Ten.Et : Ten.At}</h5>
+            </Card.Header>
+            <Card.Body>
+              <BForm onSubmit={formik.handleSubmit} encType="multipart/form-data">
+                <Row>
+                  <Col md={6}>
+                    <BForm.Group className="mb-3">
+                      <BForm.Label>{ADDP.PN}</BForm.Label>
+                      <BForm.Control
+                        type="text"
+                        name="name"
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        isInvalid={formik.touched.name && !!formik.errors.name}
+                      />
+                      <BForm.Control.Feedback type="invalid">
+                        {formik.errors.name}
+                      </BForm.Control.Feedback>
+                    </BForm.Group>
+                  </Col>
+                  <Col md={6}>
+                    <BForm.Group className="mb-3">
+                      <BForm.Label>{ADDP.Price}</BForm.Label>
+                      <BForm.Control
+                        type="number"
+                        name="price"
+                        value={formik.values.price}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        isInvalid={formik.touched.price && !!formik.errors.price}
+                      />
+                      <BForm.Control.Feedback type="invalid">
+                        {formik.errors.price}
+                      </BForm.Control.Feedback>
+                    </BForm.Group>
+                  </Col>
+                </Row>
+
+                <BForm.Group className="mb-3">
+                  <BForm.Label>{Ten.Ye}</BForm.Label>
+                  <BForm.Control
+                    as="textarea"
+                    rows={3}
+                    name="description"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                  />
+                </BForm.Group>
+
+                <BForm.Group className="mb-3">
+                  <BForm.Label>{ADDP.PI} </BForm.Label>
+                  <BForm.Control
+                    type="file"
+                    name="image"
+                    accept="image/jpeg, image/png"
+                    onChange={handleImageChange}
+                    isInvalid={formik.touched.image && !!formik.errors.image}
+                  />
+                  <BForm.Control.Feedback type="invalid">
+                    {formik.errors.image}
+                  </BForm.Control.Feedback>
+                  {imagePreview && (
+                    <div className="mt-2">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        style={{ maxWidth: '200px', maxHeight: '200px' }}
+                      />
+                    </div>
+                  )}
+                  {isEditMode && !imagePreview && (
+                    <div className="text-muted mt-2">{ADDP.Sc}</div>
+                  )}
+                </BForm.Group>
+
+                <BForm.Group className="mb-3">
+                  <BForm.Label>{Ten.Category}</BForm.Label>
+                  <BForm.Control
+                    as="select"
+                    name="category_id"
+                    value={formik.values.category_id}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    isInvalid={formik.touched.category_id && !!formik.errors.category_id}
+                  >
+                    <option value="">{ADDP.Sc}</option>
+                    <option value="1">{ADDP.Electronics}</option>
+                    <option value="2">{ADDP.Clothing}</option>
+                  </BForm.Control>
+                  <BForm.Control.Feedback type="invalid">
+                    {formik.errors.category_id}
+                  </BForm.Control.Feedback>
+                </BForm.Group>
+
+                <div className="d-flex justify-content-end gap-2">
+                  <BaseButton variant="secondary" onClick={() => navigate('/products')}>
+                    {ADDP.Cancel}
+                  </BaseButton>
+                  <BaseButton variant="primary" type="submit" disabled={loading}>
+                    {loading ? (
+                      <Spinner size="sm" animation="border" />
+                    ) : isEditMode ? (
+                      Ten.Ut
+                    ) : (
+                      Ten.At
+                    )}
+                  </BaseButton>
+                </div>
+              </BForm>
+            </Card.Body>
+          </Card>
+        </div>
+      </div>
+    </Layout>
+  );
+};
+
+export default ProductForm;

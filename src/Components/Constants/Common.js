@@ -47,9 +47,36 @@ export const Ten={
     Yo:"categoryImage",
     Ye:"description",
     Ent:"div",
-    Nam:"Name"
+    Nam:"Name",
+    Et:"Edit Product",
+    At:"Add Product",
+    Ut:"Update Product",
+    Edit:"Edit",
+    Remove:"Remove"
+    
 };
+export const ADDP={
+    PN:"Product Name",
+    Price:"Price",
+    PI:"Product Image",
+    Electronics:"Electronics",
+    Clothing:"clothing",
+    Sc:"Select Category",
+    Cancel:"Cancel",
+    Sc:"No image selected (current image will be kept)"
+}
+;
 export const MESSAGE = "Are you Sure You want to Remove this Record?";
  export const PAGE_TITLE = "Category";
 
 
+ export const Tet={
+    Message:"Message",
+    Pm:"Products",
+    Ad:"Add",
+    I1:"ID",
+    I2:"Name",
+    I3:"Desrption",
+    I4:"Image",
+    I5:"Action"
+};

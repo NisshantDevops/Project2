@@ -1,6 +1,15 @@
 import axios from "axios";
 import { token } from "../Components/Constants/Common";
 import { FileUpload } from "./ApiRoutes";
+import { 
+  AddProductRoute,
+  FetchProductRoutes,
+  UpdateProductRoute,
+  ListProductRoute,
+  DeleteProductRoute,
+  ProductFileUploadRoute
+} from "./ApiRoutes";
+import { editProduct } from "./ProductApi";
 export const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 const ApiService = {
   async request(endpoint, method, body = null) {
@@ -64,7 +73,36 @@ const ApiService = {
 
   async deleteCategory(categoryId) {
     return this.request(`/categories/${categoryId}`, "DELETE");
+  },
+  async addProduct(productData) {
+    return this.request(AddProductRoute, "POST", productData);
+  },
+  
+  async getProduct(productId) {
+    return this.request(`${FetchProductRoutes}/${productId}`, "GET");
+  },
+  
+  async editProduct(productId, productData) {
+    return this.request(`${UpdateProductRoute}/${productId}`, "PUT", productData);
+  },
+  
+  async listProducts(filters = {}) {
+    return this.request(ListProductRoute, "POST", filters);
+  },
+  
+  async deleteProduct(productId) {
+    return this.request(`${DeleteProductRoute}/${productId}`, "DELETE");
+  },
+  
+  
+  async searchProducts(queryParams) {
+    return this.request(`${FetchProductRoutes}/search?${new URLSearchParams(queryParams)}`, "GET");
+  },
+  
+  async getFeaturedProducts() {
+    return this.request(`${FetchProductRoutes}/featured`, "GET");
   }
+  
 };
 
 
