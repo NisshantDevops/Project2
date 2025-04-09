@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import { ProductApi } from '../../Api/ProductApi';
 import { addCategory } from '../../Api/CategoryApi';
 import Layout from '../../Layouts/index';
-import { AddProducts, StatusMessage, Ten, Validation,CategoryOptions, handleApiError } from '../../Components/Constants/Common';
+import { AddProducts, StatusMessage, Ten, Validation, CategoryOptions, handleApiError } from '../../Components/Constants/Common';
 import BaseButton from "../../Components/Base/Button"
 import BaseInput from '../../Components/Base/Input';
 import BaseSelect from "../../Components/Base/Button"
@@ -25,6 +25,8 @@ const ProductForm = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [data, setData] = useState(null);
+
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -36,7 +38,7 @@ const ProductForm = () => {
       size: '',
       quantity: '',
       image: null,
-      category_id: '',
+      category_id: isEditMode ? String(data?.category_id || '') : '',
     },
     validationSchema: Yup.object({
       name: Yup.string().required(Validation.ProductRequird),
@@ -121,17 +123,6 @@ const ProductForm = () => {
 
           if (data) {
             const variant = data.product_variants?.[0] || {};
-            formik.setValues({
-              name: data.name || '',
-              price: variant.price || '',
-              description: variant.description || '',
-              color: variant.color || '',
-              size: variant.size || '',
-              quantity: variant.quantity || '',
-              image: null,
-              category_id: String(data.category_id || ''),
-            });
-
             if (variant?.variant_image?.image_path) {
               setImagePreview(`${process.env.REACT_APP_BASE_URL}${variant.variant_image.image_path}`);
             }
@@ -230,7 +221,7 @@ const ProductForm = () => {
                       <img
                         src={imagePreview}
                         alt="Preview"
-                      
+
                       />
                     </div>
                   )}
@@ -260,15 +251,10 @@ const ProductForm = () => {
                   <BaseButton variant="secondary" onClick={() => navigate('/products')}>
                     {AddProducts.Cancel}
                   </BaseButton>
-                  <BaseButton variant="primary" type="submit" disabled={loading}>
-                    {loading ? (
-                      <Spinner size="sm" animation="border" />
-                    ) : isEditMode ? (
-                      Ten.Ut
-                    ) : (
-                      Ten.At
-                    )}
+                  <BaseButton variant="primary" type="submit" loading={loading} disabled={loading}>
+                    {isEditMode ? Ten.Ut : Ten.At}
                   </BaseButton>
+
                 </div>
               </BForm>
             </Card.Body>

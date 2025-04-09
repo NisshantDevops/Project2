@@ -45,12 +45,12 @@ Title.ProductValue = (handleSort, navigate, handleDeleteClick) => [
     title: "Action",
     render: (_, row) => (
       <div className="d-flex gap-2">
-        <button
+        <BaseButton
           className="btn btn-sm btn-success edit-item-btn"
           onClick={() => navigate(`/products/edit/${row.product_id}`)}
         >
           <i className="ri-edit-line align-bottom me-1"></i> {Ten.Edit}
-        </button>
+        </BaseButton>
         <BaseButton
           className="btn btn-sm btn-danger remove-item-btn"
           onClick={() => handleDeleteClick(row)}
