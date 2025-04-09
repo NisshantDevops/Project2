@@ -9,17 +9,13 @@ import Spinner from "../../Components/Common/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import "../../App.css";
 import ImageError from "../../../src/assets/images/auth-one-bg.jpg";
-import { StatusMessage, Tet } from "../../Components/Constants/Common";
+import { ADDP, AddProducts, handleApiError, ProductTitle, StatusMessage, Tet } from "../../Components/Constants/Common";
 import BaseButton from "../../Components/Base/Button";
 import BaseInput from "../../Components/Base/Input";
 import { Cats } from "../../Components/Constant/Common";
 import { useParams } from 'react-router-dom';
-
-
-
-
-
-
+import { IsResponseOk } from "../../Components/Constants/Common";
+import BaseTable from "../Table/BaseTable";
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +23,7 @@ const Product = () => {
   const [modaldelete, setmodaldelete] = useState(false);
   const navigate = useNavigate();
 
-  document.title = "Product";
+  document.title = ProductTitle.ProductHeader;
 
 
   const handleImageError = (event) => {
@@ -72,21 +68,14 @@ const Product = () => {
 
     try {
       const response = await deleteProduct(productToDelete.id);
-
-
-      if (response && response.status === StatusMessage) {
+      if (IsResponseOk(response, StatusMessage)){
         toast.success(StatusMessage);
         setProducts(prev => prev.filter(({ id }) => id !== productToDelete.id));
       } else {
         toast.error(response?.message);
       }
     } catch (err) {
-      console.error('Delete error:', err);
-      const errorMessage = err.response?.data?.message
-        || err.response?.data?.error
-        || err.message
-        ;
-      toast.error(errorMessage);
+      handleApiError(Error);
     } finally {
       setmodaldelete(false);
       setProductToDelete(null);
@@ -96,7 +85,7 @@ const Product = () => {
 
 
   return (
-    <Layout>
+    
       <div className="page-content">
         <Container fluid>
           <Row>
@@ -117,7 +106,7 @@ const Product = () => {
                     <Spinner />
                   ) : (
                     <div className="table-responsive">
-                      <table className="table table-bordered table-hover">
+                      <BaseTable className="table table-bordered table-hover">
                         <thead className="table-light">
                           <tr>
                             <th>{Tet.I1}</th>
@@ -143,7 +132,7 @@ const Product = () => {
                                   />
 
                                 ) : (
-                                  "No image available"
+                                  AddProducts.Nia
                                 )}
                               </td>
                               <td>
@@ -167,7 +156,7 @@ const Product = () => {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </BaseTable>
                     </div>
                   )}
                 </CardBody>
@@ -184,7 +173,7 @@ const Product = () => {
         />
         <ToastContainer />
       </div>
-    </Layout>
+    
   );
 };
 

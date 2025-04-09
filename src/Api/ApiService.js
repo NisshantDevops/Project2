@@ -59,50 +59,7 @@ const ApiService = {
       throw new Error(error.response?.data?.message);
     }
   },
-  async getCategoryById(categoryId) {
-    return this.request(`/categories/${categoryId}`, "GET");
-  },
-
-  async addCategory(categoryData) {
-    return this.request("/categories", "POST", categoryData);
-  },
-
-  async updateCategory(categoryId, categoryData) {
-    return this.request(`/categories/${categoryId}`, "PUT", categoryData);
-  },
-
-  async deleteCategory(categoryId) {
-    return this.request(`/categories/${categoryId}`, "DELETE");
-  },
-  async addProduct(productData) {
-    return this.request(AddProductRoute, "POST", productData);
-  },
-  
-  async getProduct(productId) {
-    return this.request(`${FetchProductRoutes}/${productId}`, "GET");
-  },
-  
-  async editProduct(productId, productData) {
-    return this.request(`${UpdateProductRoute}/${productId}`, "PUT", productData);
-  },
-  
-  async listProducts(filters = {}) {
-    return this.request(ListProductRoute, "POST", filters);
-  },
-  
-  async deleteProduct(productId) {
-    return this.request(`${DeleteProductRoute}/${productId}`, "DELETE");
-  },
-  
-  
-  async searchProducts(queryParams) {
-    return this.request(`${FetchProductRoutes}/search?${new URLSearchParams(queryParams)}`, "GET");
-  },
-  
-  async getFeaturedProducts() {
-    return this.request(`${FetchProductRoutes}/featured`, "GET");
-  }
-  
+ 
 };
 
 

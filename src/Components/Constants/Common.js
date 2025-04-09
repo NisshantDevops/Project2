@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { toast } from 'react-toastify';
 export const token = localStorage.getItem("token");
 
 
@@ -55,7 +56,7 @@ export const Ten={
     Remove:"Remove"
     
 };
-export const ADDP={
+export const AddProducts={
     PN:"Product Name",
     Price:"Price",
     PI:"Product Image",
@@ -63,7 +64,8 @@ export const ADDP={
     Clothing:"clothing",
     Sc:"Select Category",
     Cancel:"Cancel",
-    Sc:"No image selected (current image will be kept)"
+    Sc:"No image selected (current image will be kept)",
+    Nia:"No image available"
 }
 ;
 export const MESSAGE = "Are you Sure You want to Remove this Record?";
@@ -80,3 +82,39 @@ export const MESSAGE = "Are you Sure You want to Remove this Record?";
     I4:"Image",
     I5:"Action"
 };
+export const Validation={
+    ProductRequird:"Product name is required",
+    ProductNumber:'Price must be a number',
+    ProdcutR:'Price is required',
+    ProdcutP:'Price must be positive',
+    CategoryR:'Category is required'
+
+}
+export const CategoryOptions = [
+    { value: "1", label: "Electronics" },
+    { value: "2", label: "Clothing" },
+  ];
+  export const ProductTitle={
+    ProductHeader:"Product"
+  };
+  export const handleApiError = (error) => {
+    const messages = error?.response?.data?.message;
+  
+    if (Array.isArray(messages)) {
+      messages.forEach(msg => {
+        toast.error(msg);
+      });
+    } else if (typeof messages === 'string') {
+      toast.error(messages);
+    } else {
+      toast.error(error?.message );
+    }
+  
+    console.error('API Error:', error);
+  };
+  export const IsResponseOk = (response, expectedStatus) => {
+    return response && response.status === expectedStatus;
+  };
+  export const Title={
+       ProductValue :"PRODUCT_COLUMNS"
+  };

@@ -7,9 +7,11 @@ import * as Yup from 'yup';
 import { ProductApi } from '../../Api/ProductApi';
 import { addCategory } from '../../Api/CategoryApi';
 import Layout from '../../Layouts/index';
-import { StatusMessage, Ten } from '../../Components/Constants/Common';
-import { ADDP } from '../../Components/Constants/Common';
+import { AddProducts, StatusMessage, Ten, Validation,CategoryOptions, handleApiError } from '../../Components/Constants/Common';
 import BaseButton from "../../Components/Base/Button"
+import BaseInput from '../../Components/Base/Input';
+import BaseSelect from "../../Components/Base/Button"
+
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -37,34 +39,30 @@ const ProductForm = () => {
       category_id: '',
     },
     validationSchema: Yup.object({
-      name: Yup.string().required('Product name is required'),
-      price: Yup.number().typeError('Price must be a number').required('Price is required').positive('Price must be positive'),
+      name: Yup.string().required(Validation.ProductRequird),
+      price: Yup.number()
+        .typeError(Validation.ProductNumber)
+        .required(Validation.ProdcutR)
+        .positive(Validation.ProdcutP),
       description: Yup.string(),
-      category_id: Yup.string().required('Category is required'),
-      image: Yup.mixed().test('fileSize', 'File too large (max 2MB)', (value) => {
-        if (!value) return !isEditMode;
-        return value.size <= 2000000;
-      }).test('fileType', 'Unsupported file format (JPEG/PNG only)', (value) => {
-        if (!value) return !isEditMode;
-        return ['image/jpeg', 'image/png'].includes(value.type);
-      }),
+      category_id: Yup.string().required(Validation.CategoryR),
     }),
-    
+
 
     onSubmit: async (values) => {
       try {
         setLoading(true);
-    
+
         if (!values.name?.trim()) {
           toast.error(StatusMessage);
           return;
         }
-    
+
         if (!values.category_id || isNaN(values.category_id)) {
           toast.error(StatusMessage);
           return;
         }
-    
+
         const payload = {
           name: values.name.trim(),
           category_id: Number(values.category_id),
@@ -72,40 +70,39 @@ const ProductForm = () => {
             {
               product_title_name: values.name.trim(),
               description: values.description || '',
-              color: values.color || 'Black',
-              size: values.size || '128GB',
+              color: values.color,
+              size: values.size,
               price: Number(values.price || 0),
               quantity: Number(values.quantity || 1),
               variant_image: {
-                image_path: values.image?.name || 'default.png',
+                image_path: values.image?.name,
               },
             },
           ],
         };
-    
-       
-    
+
+
+
         let response;
         if (isEditMode) {
           const productId = id || productData?.id;
           response = await ProductApi.updateProduct(productId, payload);
-          toast.success(response.data?.statusMessage );
+          toast.success(response.data?.statusMessage);
         } else {
           response = await ProductApi.addProduct(payload);
-          toast.success(response.data?.statusMessage );
+          toast.success(response.data?.statusMessage);
         }
-    
+
         navigate('/products');
       } catch (error) {
-        console.error('Product save failed:', error.response?.data || error.message);
-        toast.error(error.response?.data?.message?.[0] );
+        handleApiError(error);
       } finally {
         setLoading(false);
       }
     },
-  
-    
-    
+
+
+
   });
 
   useEffect(() => {
@@ -131,7 +128,7 @@ const ProductForm = () => {
               color: variant.color || '',
               size: variant.size || '',
               quantity: variant.quantity || '',
-              image: null,  
+              image: null,
               category_id: String(data.category_id || ''),
             });
 
@@ -171,15 +168,17 @@ const ProductForm = () => {
                 <Row>
                   <Col md={6}>
                     <BForm.Group className="mb-3">
-                      <BForm.Label>{ADDP.PN}</BForm.Label>
-                      <BForm.Control
+                      <BForm.Label>{AddProducts.PN}</BForm.Label>
+                      <BaseInput
+                        label={AddProducts.PN}
                         type="text"
                         name="name"
                         value={formik.values.name}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        isInvalid={formik.touched.name && !!formik.errors.name}
+                        error={formik.touched.name && formik.errors.name}
                       />
+
                       <BForm.Control.Feedback type="invalid">
                         {formik.errors.name}
                       </BForm.Control.Feedback>
@@ -187,7 +186,7 @@ const ProductForm = () => {
                   </Col>
                   <Col md={6}>
                     <BForm.Group className="mb-3">
-                      <BForm.Label>{ADDP.Price}</BForm.Label>
+                      <BForm.Label>{AddProducts.Price}</BForm.Label>
                       <BForm.Control
                         type="number"
                         name="price"
@@ -215,7 +214,7 @@ const ProductForm = () => {
                 </BForm.Group>
 
                 <BForm.Group className="mb-3">
-                  <BForm.Label>{ADDP.PI} </BForm.Label>
+                  <BForm.Label>{AddProducts.PI} </BForm.Label>
                   <BForm.Control
                     type="file"
                     name="image"
@@ -231,29 +230,27 @@ const ProductForm = () => {
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        style={{ maxWidth: '200px', maxHeight: '200px' }}
+                      
                       />
                     </div>
                   )}
                   {isEditMode && !imagePreview && (
-                    <div className="text-muted mt-2">{ADDP.Sc}</div>
+                    <div className="text-muted mt-2">{AddProducts.Sc}</div>
                   )}
                 </BForm.Group>
 
                 <BForm.Group className="mb-3">
                   <BForm.Label>{Ten.Category}</BForm.Label>
-                  <BForm.Control
-                    as="select"
+                  <BaseSelect
+                    label={Ten.Category}
                     name="category_id"
+                    options={CategoryOptions}
                     value={formik.values.category_id}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    isInvalid={formik.touched.category_id && !!formik.errors.category_id}
-                  >
-                    <option value="">{ADDP.Sc}</option>
-                    <option value="1">{ADDP.Electronics}</option>
-                    <option value="2">{ADDP.Clothing}</option>
-                  </BForm.Control>
+                    error={formik.touched.category_id && formik.errors.category_id}
+                  />
+
                   <BForm.Control.Feedback type="invalid">
                     {formik.errors.category_id}
                   </BForm.Control.Feedback>
@@ -261,7 +258,7 @@ const ProductForm = () => {
 
                 <div className="d-flex justify-content-end gap-2">
                   <BaseButton variant="secondary" onClick={() => navigate('/products')}>
-                    {ADDP.Cancel}
+                    {AddProducts.Cancel}
                   </BaseButton>
                   <BaseButton variant="primary" type="submit" disabled={loading}>
                     {loading ? (

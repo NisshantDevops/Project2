@@ -1,8 +1,9 @@
 import ImageError from "../../assets/images/auth-one-bg.jpg";
 import "../../App.css";
-import { Ten } from "../../Components/Constants/Common";
+import { Ten, Title } from "../../Components/Constants/Common";
+import BaseButton from "../../Components/Base/Button";
 
-export const PRODUCT_COLUMNS = (handleSort, navigate, handleDeleteClick) => [
+Title.ProductValue = (handleSort, navigate, handleDeleteClick) => [
   {
     key: "product_id",
     title: "Product ID",
@@ -50,12 +51,12 @@ export const PRODUCT_COLUMNS = (handleSort, navigate, handleDeleteClick) => [
         >
           <i className="ri-edit-line align-bottom me-1"></i> {Ten.Edit}
         </button>
-        <button
+        <BaseButton
           className="btn btn-sm btn-danger remove-item-btn"
           onClick={() => handleDeleteClick(row)}
         >
           <i className="ri-delete-bin-line align-bottom me-1"></i> {Ten.Remove}
-        </button>
+        </BaseButton>
       </div>
     ),
   },
