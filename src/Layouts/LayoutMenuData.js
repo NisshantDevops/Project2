@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/scss/themes.scss";
-import { Ten } from "../Components/Constants/Common";
+import { Ten, Tender } from "../Components/Constants/Common";
 
 const Navdata = () => {
   const history = useNavigate();
@@ -30,19 +30,19 @@ const Navdata = () => {
 
   useEffect(() => {
     document.body.classList.remove("twocolumn-panel");
-    if (iscurrentState !== Ten.Dashboard) {
+    if (iscurrentState !== Tender.Dashboard) {
       setIsDashboard(false);
     }
-    if (iscurrentState !== Ten.Apps) {
+    if (iscurrentState !== Tender.Apps) {
       setIsApps(false);
     }
-    if (iscurrentState !== Ten.Category) {
+    if (iscurrentState !== Tender.Category) {
       setIsCategory(false);
     }
-    if (iscurrentState !== Ten.Reports) {
+    if (iscurrentState !== Tender.Reports) {
       setIsReports(false);
     }
-    if (iscurrentState !== Ten.Prodcuts) {
+    if (iscurrentState !== Tender.Prodcuts) {
       setIsProducts(false);
     }
   }, [

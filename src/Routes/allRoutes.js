@@ -5,6 +5,8 @@ import ForgetPasswordPage from "../pages/Authentication/ForgetPassword";
 import ChangePassword from "../pages/Authentication/ChangePassword";
 import Header from "../Layouts/Header";
 import Category from "../pages/Category/Category";
+import Product from "../pages/Products/Product"; 
+import AddProduct from "../pages/Products/AddProduct";
 
 
 const authProtectedRoutes = [
@@ -14,6 +16,7 @@ const authProtectedRoutes = [
     component: <Header />,
   },
   { path: "/changePassword", component: <ChangePassword /> },
+  
 ];
 
 const publicRoutes = [
@@ -21,6 +24,10 @@ const publicRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
   { path: "/category", component: <Category /> },
+  { path: "/Products", component: <Product /> },
+  { path:"/AddProduct", component:<AddProduct /> },
+  {path:"/editProduct/:id", element:<AddProduct /> }
+  
 ];
 
 

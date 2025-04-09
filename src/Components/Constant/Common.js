@@ -27,5 +27,6 @@ CateNa:"Category Name",
 CateShow:"Showing",
 CateProcessing:" Processing...",
 CatePrevious:"Previous",
-CateNext:"Next"
+CateNext:"Next",
+CateEdit:"Edit"
 };

@@ -1,6 +1,15 @@
 import axios from "axios";
 import { token } from "../Components/Constants/Common";
 import { FileUpload } from "./ApiRoutes";
+import { 
+  AddProductRoute,
+  FetchProductRoutes,
+  UpdateProductRoute,
+  ListProductRoute,
+  DeleteProductRoute,
+  ProductFileUploadRoute
+} from "./ApiRoutes";
+import { editProduct } from "./ProductApi";
 export const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 const ApiService = {
   async request(endpoint, method, body = null) {
@@ -50,21 +59,7 @@ const ApiService = {
       throw new Error(error.response?.data?.message);
     }
   },
-  async getCategoryById(categoryId) {
-    return this.request(`/categories/${categoryId}`, "GET");
-  },
-
-  async addCategory(categoryData) {
-    return this.request("/categories", "POST", categoryData);
-  },
-
-  async updateCategory(categoryId, categoryData) {
-    return this.request(`/categories/${categoryId}`, "PUT", categoryData);
-  },
-
-  async deleteCategory(categoryId) {
-    return this.request(`/categories/${categoryId}`, "DELETE");
-  }
+ 
 };
 
 
