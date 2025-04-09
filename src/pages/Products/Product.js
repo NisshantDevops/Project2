@@ -89,7 +89,7 @@ const Product = () => {
     
   };
   
-   const PRODUCTCOLUMNS = (handleSort, navigate, handleDeleteClick) => [
+   const ProductColums = (handleSort, navigate, handleDeleteClick) => [
     {
       key: ProductContant.Id,
       title: ProductContant.Tilte,
@@ -173,7 +173,7 @@ const Product = () => {
                   <div className="table-responsive">
                     <BaseTable
                       className="table table-bordered table-hover"
-                      columns={PRODUCTCOLUMNS(handleSort, navigate, handleDeleteClick)}
+                      columns={ProductColums(handleSort, navigate, handleDeleteClick)}
                       data={products}
                       actions={["edit", "delete"]}
                     />
