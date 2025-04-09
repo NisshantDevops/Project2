@@ -45,3 +45,8 @@
   max-width: 200px;
   max-height: 200px;
 }
+.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}

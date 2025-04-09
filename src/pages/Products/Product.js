@@ -9,7 +9,7 @@ import Spinner from "../../Components/Common/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import "../../App.css";
 import ImageError from "../../../src/assets/images/auth-one-bg.jpg";
-import { Timetable } from "../../Components/Constants/Common";
+import { Tender, Timetable } from "../../Components/Constants/Common";
 import { ADDP, AddProducts, handleApiError, ProductTitle, StatusMessage } from "../../Components/Constants/Common";
 import BaseButton from "../../Components/Base/Button";
 import BaseInput from "../../Components/Base/Input";
@@ -17,6 +17,7 @@ import { Cats } from "../../Components/Constant/Common";
 import { useParams } from 'react-router-dom';
 import { IsResponseOk } from "../../Components/Constants/Common";
 import BaseTable from "../Table/BaseTable";
+import { ProductContant } from "./productConstants";
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +70,7 @@ const Product = () => {
 
     try {
       const response = await deleteProduct(productToDelete.id);
-      if (IsResponseOk(response, StatusMessage)){
+      if (IsResponseOk(response, StatusMessage)) {
         toast.success(StatusMessage);
         setProducts(prev => prev.filter(({ id }) => id !== productToDelete.id));
       } else {
@@ -82,99 +83,117 @@ const Product = () => {
       setProductToDelete(null);
     }
   };
+  const handleSort = (columnKey, direction) => {
+
+    console.log(`Sort by ${columnKey} in ${direction} order`);
+    
+  };
+  
+   const PRODUCTCOLUMNS = (handleSort, navigate, handleDeleteClick) => [
+    {
+      key: ProductContant.Id,
+      title: ProductContant.Tilte,
+      sortable: true,
+      onClick: () => handleSort(ProductContant.Id),
+    },
+    {
+      key: ProductContant.Name,
+      title: ProductContant.TitleName,
+      sortable: true,
+      onClick: () => handleSort(ProductContant.Name),
+    },
+    {
+      key: ProductContant.Descrption,
+      title: ProductContant.TitleDescrption,
+      sortable: true,
+      onClick: () => handleSort(ProductContant.Descrption),
+    },
+    { 
+      key: ProductContant.Price, 
+      title: ProductContant.TitlePrice,
+      render: (price) => `$${price?.toFixed(2) || '0.00'}`
+    },
+    {
+      key: ProductContant.Image,
+      title: ProductContant.TitleIamge,
+      render: (image) => (
+        <img
+          src={image || ImageError}
+          alt="product"
+          className="img-thumbnail onerror-img-pro"
+          onError={(e) => (e.target.src = ImageError)}
+        />
+      ),
+    },
+    {
+      key: ProductContant.Action,
+      title: ProductContant.TitleAction,
+      render: (_, row) => (
+        <div className="d-flex gap-2">
+          <BaseButton
+            className="btn btn-sm btn-success edit-item-btn"
+            onClick={() => navigate(`/products/edit/${row.product_id}`)}
+          >
+            <i className="ri-edit-line align-bottom me-1"></i> {Tender.Edit}
+          </BaseButton>
+          <BaseButton
+            className="btn btn-sm btn-danger remove-item-btn"
+            onClick={() => handleDeleteClick(row)}
+          >
+            <i className="ri-delete-bin-line align-bottom me-1"></i> {Tender.Remove}
+          </BaseButton>
+        </div>
+      ),
+    },
+  ];
 
 
 
   return (
-    
-      <div className="page-content">
-        <Container fluid>
-          <Row>
-            <Col lg={12}>
-              <Card>
-                <CardHeader className="d-flex justify-content-between align-items-center">
-                  <h5 className="card-title mb-0">{Timetable.ProdcutModel}</h5>
-                  <BaseButton
-                    color="success"
-                    onClick={() => navigate("/AddProduct")}
-                  >
-                    <i className="ri-add-line align-bottom me-1"></i> {Timetable.Add}
-                  </BaseButton>
-                </CardHeader>
 
-                <CardBody>
-                  {loading ? (
-                    <Spinner />
-                  ) : (
-                    <div className="table-responsive">
-                      <BaseTable className="table table-bordered table-hover">
-                        <thead className="table-light">
-                          <tr>
-                            <th>{Timetable.Item1}</th>
-                            <th>{Timetable.Item2}</th>
-                            <th>{Timetable.Item3}</th>
-                            <th>{Timetable.Item4}</th>
-                            <th>{Timetable.Item5}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {products.map((product) => (
-                            <tr key={product.id}>
-                              <td>{product.id}</td>
-                              <td>{product.name}</td>
-                              <td>{product.description}</td>
-                              <td>
-                                {product.image ? (
-                                  <img
-                                    src={product.image ? product.image : ImageError}
-                                    alt={product.name || "Product"}
-                                    className="product-img"
-                                    onError={handleImageError}
-                                  />
+    <div className="page-content">
+      <Container fluid>
+        <Row>
+          <Col lg={12}>
+            <Card>
+              <CardHeader className="d-flex justify-content-between align-items-center">
+                <h5 className="card-title mb-0">{Timetable.ProductModel}</h5>
+                <BaseButton
+                  color="success"
+                  onClick={() => navigate("/AddProduct")}
+                >
+                  <i className="ri-add-line align-bottom me-1"></i> {Timetable.Add}
+                </BaseButton>
+              </CardHeader>
 
-                                ) : (
-                                  AddProducts.Nia
-                                )}
-                              </td>
-                              <td>
-                                <div className="d-flex gap-2">
-                                  <BaseButton
-                                    color="primary"
-                                    size="sm"
-                                    onClick={() => navigate(`/addProduct`, { state: { productData: product, isEditMode: true } })}
-                                  >
-                                    {Cats.CateEdit}
-                                  </BaseButton>
-                                  <BaseButton
-                                    color="danger"
-                                    size="sm"
-                                    onClick={() => handleDeleteClick(product)}
-                                  >
-                                    {Cats.CateDelete}
-                                  </BaseButton>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </BaseTable>
-                    </div>
-                  )}
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
+              <CardBody>
+                {loading ? (
+                  <Spinner />
+                ) : (
+                  <div className="table-responsive">
+                    <BaseTable
+                      className="table table-bordered table-hover"
+                      columns={PRODUCTCOLUMNS(handleSort, navigate, handleDeleteClick)}
+                      data={products}
+                      actions={["edit", "delete"]}
+                    />
+                  </div>
+                )}
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
 
-        <CommonDeleteModal
-          isOpen={modaldelete}
-          toggle={() => setmodaldelete(!modaldelete)}
-          message={Timetable.Message}
-          confirmDelete={confirmDelete}
-        />
-        <ToastContainer />
-      </div>
-    
+      <CommonDeleteModal
+        isOpen={modaldelete}
+        toggle={() => setmodaldelete(!modaldelete)}
+        message={Timetable.Message}
+        confirmDelete={confirmDelete}
+      />
+      <ToastContainer />
+    </div>
+
   );
 };
 

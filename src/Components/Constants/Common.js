@@ -85,14 +85,7 @@ export const MESSAGE = "Are you Sure You want to Remove this Record?";
     Item4:"Image",
     Item5:"Action"
 };
-// export const Validation={
-//     ProductRequird:"Product name is required",
-//     ProductNumber:'Price must be a number',
-//     ProdcutR:'Price is required',
-//     ProdcutP:'Price must be positive',
-//     CategoryR:'Category is required'
 
-// }
 export const CategoryOptions = [
     { value: "1", label: "Electronics" },
     { value: "2", label: "Clothing" },
