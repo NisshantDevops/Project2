@@ -28,7 +28,7 @@ import { CATEGORY_COLUMNS } from "./CategoryConstant";
 import { Cats } from "../../Components/Constant/Common";
 import moment from "moment";
 import { StatusCodes } from "http-status-codes";
-import { StatusMessage } from "../../Components/Constants/Common";
+import { StatusMessage, Tender } from "../../Components/Constants/Common";
 import { MESSAGE } from "../../Components/Constants/Common";
 import ApiService from "../../Api/ApiService";
 import { PAGE_TITLE } from "../../Components/Constants/Common";
@@ -378,7 +378,7 @@ const Category = () => {
                                 <BaseInput
                                   type="text"
                                   className="form-control search"
-                                  placeholder={Ten.Search}
+                                  placeholder={Tender.Search}
                                   value={searchTerm}
                                   onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -462,16 +462,16 @@ const Category = () => {
                   </Label>
                   <Field
                     as={BaseInput}
-                    type={Ten.Type}
-                    id={Ten.Id}
-                    className={Ten.ClassName}
-                    placeholder={Ten.Placeholder}
+                    type={Tender.Type}
+                    id={Tender.Id}
+                    className={Tender.ClassName}
+                    placeholder={Tender.Placeholder}
                     name="name"
                     invalid={touched.name && !!errors.name}
                   />
                   <ErrorMessage
-                    name={Ten.Nam}
-                    component={Ten.Ent}
+                    name={Tender.Nam}
+                    component={Tender.Ent}
                     className="text-danger small"
                   />
                 </div>

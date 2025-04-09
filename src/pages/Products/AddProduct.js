@@ -3,15 +3,15 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Card, Spinner, Row, Col, Form as BForm, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { ProductApi } from '../../Api/ProductApi';
 import { addCategory } from '../../Api/CategoryApi';
 import Layout from '../../Layouts/index';
-import { AddProducts, StatusMessage, Ten, Validation, CategoryOptions, handleApiError } from '../../Components/Constants/Common';
+import { Tender } from '../../Components/Constants/Common';
+import { AddProducts, StatusMessage, Validation, CategoryOptions, handleApiError } from '../../Components/Constants/Common';
 import BaseButton from "../../Components/Base/Button"
 import BaseInput from '../../Components/Base/Input';
-import BaseSelect from "../../Components/Base/Button"
-
+import BaseSelect from "../../Components/Base/Input"
+import { productValidationSchema } from '../../Components/Constants/Common';
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -40,15 +40,7 @@ const ProductForm = () => {
       image: null,
       category_id: isEditMode ? String(data?.category_id || '') : '',
     },
-    validationSchema: Yup.object({
-      name: Yup.string().required(Validation.ProductRequird),
-      price: Yup.number()
-        .typeError(Validation.ProductNumber)
-        .required(Validation.ProdcutR)
-        .positive(Validation.ProdcutP),
-      description: Yup.string(),
-      category_id: Yup.string().required(Validation.CategoryR),
-    }),
+    validationSchema: productValidationSchema(),
 
 
     onSubmit: async (values) => {
@@ -147,121 +139,110 @@ const ProductForm = () => {
   };
 
   return (
-    <Layout>
-      <div className="page-content">
-        <div className="container-fluid">
-          <Card>
-            <Card.Header>
-              <h5>{isEditMode ? Ten.Et : Ten.At}</h5>
-            </Card.Header>
-            <Card.Body>
-              <BForm onSubmit={formik.handleSubmit} encType="multipart/form-data">
-                <Row>
-                  <Col md={6}>
-                    <BForm.Group className="mb-3">
-                      <BForm.Label>{AddProducts.PN}</BForm.Label>
-                      <BaseInput
-                        label={AddProducts.PN}
-                        type="text"
-                        name="name"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.name && formik.errors.name}
-                      />
 
-                      <BForm.Control.Feedback type="invalid">
-                        {formik.errors.name}
-                      </BForm.Control.Feedback>
-                    </BForm.Group>
-                  </Col>
-                  <Col md={6}>
-                    <BForm.Group className="mb-3">
-                      <BForm.Label>{AddProducts.Price}</BForm.Label>
-                      <BForm.Control
-                        type="number"
-                        name="price"
-                        value={formik.values.price}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        isInvalid={formik.touched.price && !!formik.errors.price}
-                      />
-                      <BForm.Control.Feedback type="invalid">
-                        {formik.errors.price}
-                      </BForm.Control.Feedback>
-                    </BForm.Group>
-                  </Col>
-                </Row>
+    <div className="page-content">
+      <div className="container-fluid">
+        <Card>
+          <Card.Header>
+            <h5>{isEditMode ? Tender.EditProduct : Tender.AddProduct}</h5>
+          </Card.Header>
+          <Card.Body>
+            <BForm onSubmit={formik.handleSubmit} encType="multipart/form-data">
+              <Row>
+                <Col md={6}>
+                  <BForm.Group className="mb-3">
+                   
+                    <BaseInput
+                      label={AddProducts.ProductName}
+                      type="text"
+                      name="name"
+                      value={formik.values.name}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
 
-                <BForm.Group className="mb-3">
-                  <BForm.Label>{Ten.Ye}</BForm.Label>
-                  <BForm.Control
-                    as="textarea"
-                    rows={3}
-                    name="description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                  />
-                </BForm.Group>
+                    />
+                  </BForm.Group>
+                </Col>
+                <Col md={6}>
+                  <BForm.Group className="mb-3">
+                    
+                    <BaseInput
+                      label={AddProducts.Price}
+                      type="number"
+                      name="price"
+                      value={formik.values.price}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
 
-                <BForm.Group className="mb-3">
-                  <BForm.Label>{AddProducts.PI} </BForm.Label>
-                  <BForm.Control
-                    type="file"
-                    name="image"
-                    accept="image/jpeg, image/png"
-                    onChange={handleImageChange}
-                    isInvalid={formik.touched.image && !!formik.errors.image}
-                  />
-                  <BForm.Control.Feedback type="invalid">
-                    {formik.errors.image}
-                  </BForm.Control.Feedback>
-                  {imagePreview && (
-                    <div className="mt-2">
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
+                    />
+                  </BForm.Group>
+                </Col>
+              </Row>
 
-                      />
-                    </div>
-                  )}
-                  {isEditMode && !imagePreview && (
-                    <div className="text-muted mt-2">{AddProducts.Sc}</div>
-                  )}
-                </BForm.Group>
+              <BForm.Group className="mb-3">
+                
+                <BaseInput
+                  label={Tender.Deep}
+                  type="textarea"
+                  name="description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
 
-                <BForm.Group className="mb-3">
-                  <BForm.Label>{Ten.Category}</BForm.Label>
-                  <BaseSelect
-                    label={Ten.Category}
-                    name="category_id"
-                    options={CategoryOptions}
-                    value={formik.values.category_id}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.category_id && formik.errors.category_id}
-                  />
+                  rows={3}
+                />
+              </BForm.Group>
 
-                  <BForm.Control.Feedback type="invalid">
-                    {formik.errors.category_id}
-                  </BForm.Control.Feedback>
-                </BForm.Group>
+              <BForm.Group className="mb-3">
+               
+                <BaseInput
+                label={AddProducts.ProductIamge}
+                  type="file"
+                  name="image"
+                  accept="image/jpeg, image/png"
+                  onChange={handleImageChange}
+                  onBlur={formik.handleBlur}
 
-                <div className="d-flex justify-content-end gap-2">
-                  <BaseButton variant="secondary" onClick={() => navigate('/products')}>
-                    {AddProducts.Cancel}
-                  </BaseButton>
-                  <BaseButton variant="primary" type="submit" loading={loading} disabled={loading}>
-                    {isEditMode ? Ten.Ut : Ten.At}
-                  </BaseButton>
+                />
+                {imagePreview && (
+                  <div className="mt-2">
+                    <img src={imagePreview} alt="Preview" />
+                  </div>
+                )}
+                {isEditMode && !imagePreview && (
+                  <div className="text-muted mt-2">{AddProducts.SelectimageCat}</div>
+                )}
+              </BForm.Group>
 
-                </div>
-              </BForm>
-            </Card.Body>
-          </Card>
-        </div>
+              <BForm.Group className="mb-3">
+               
+                <BaseSelect
+                 label={Tender.Category}
+                  name={AddProducts.IdValue}
+                  options={CategoryOptions}
+                  value={formik.values.category_id}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                 
+                />
+
+              </BForm.Group>
+
+              <div className="d-flex justify-content-end gap-2">
+                <BaseButton variant="secondary" onClick={() => navigate('/products')}>
+                  {AddProducts.Cancel}
+                </BaseButton>
+                <BaseButton variant="primary" type="submit" loading={loading} disabled={loading}>
+                  {isEditMode ? Tender.UpdateProdcut : Tender.AddProduct}
+                </BaseButton>
+
+              </div>
+            </BForm>
+          </Card.Body>
+        </Card>
       </div>
-    </Layout>
+    </div>
+
   );
 };
 

@@ -1,5 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+
 export const token = localStorage.getItem("token");
 
 
@@ -28,7 +30,7 @@ export const Texts = {
     Add:"Add"
 };
 
-export const Ten={
+export const Tender={
     Dashboard:"Dashboard",
     Apps:"Apps",
     Category:"Category",
@@ -46,50 +48,51 @@ export const Ten={
     Bdd:"description",
     Zee:"file",
     Yo:"categoryImage",
-    Ye:"description",
+    Deep:"description",
     Ent:"div",
     Nam:"Name",
-    Et:"Edit Product",
-    At:"Add Product",
-    Ut:"Update Product",
+    EditProduct:"Edit Product",
+    AddProduct:"Add Product",
+    UpdateProdcut:"Update Product",
     Edit:"Edit",
     Remove:"Remove"
     
 };
 export const AddProducts={
-    PN:"Product Name",
+    ProductName:"Product Name",
     Price:"Price",
-    PI:"Product Image",
+    ProductIamge:"Product Image",
     Electronics:"Electronics",
     Clothing:"clothing",
-    Sc:"Select Category",
+    SelectimageCat:"Select Category",
     Cancel:"Cancel",
     Sc:"No image selected (current image will be kept)",
-    Nia:"No image available"
+    Nia:"No image available",
+    IdValue:"category_id"
 }
 ;
 export const MESSAGE = "Are you Sure You want to Remove this Record?";
  export const PAGE_TITLE = "Category";
 
 
- export const Tet={
+ export const Timetable={
     Message:"Message",
-    Pm:"Products",
-    Ad:"Add",
-    I1:"ID",
-    I2:"Name",
-    I3:"Desrption",
-    I4:"Image",
-    I5:"Action"
+    ProductModel:"Products",
+    Add:"Add",
+    Item1:"ID",
+    Item2:"Name",
+    Item3:"Desrption",
+    Item4:"Image",
+    Item5:"Action"
 };
-export const Validation={
-    ProductRequird:"Product name is required",
-    ProductNumber:'Price must be a number',
-    ProdcutR:'Price is required',
-    ProdcutP:'Price must be positive',
-    CategoryR:'Category is required'
+// export const Validation={
+//     ProductRequird:"Product name is required",
+//     ProductNumber:'Price must be a number',
+//     ProdcutR:'Price is required',
+//     ProdcutP:'Price must be positive',
+//     CategoryR:'Category is required'
 
-}
+// }
 export const CategoryOptions = [
     { value: "1", label: "Electronics" },
     { value: "2", label: "Clothing" },
@@ -118,3 +121,13 @@ export const CategoryOptions = [
   export const Title={
        ProductValue :"PRODUCT_COLUMNS"
   };
+  export const productValidationSchema = () =>
+    Yup.object({
+      name: Yup.string().required("Product name is required"),
+      price: Yup.number()
+        .typeError('Price must be a number')
+        .required('Price is required')
+        .positive('Price must be positive'),
+      description: Yup.string(),
+      category_id: Yup.string().required('Category is required'),
+    });

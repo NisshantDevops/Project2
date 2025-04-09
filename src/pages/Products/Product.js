@@ -9,7 +9,8 @@ import Spinner from "../../Components/Common/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import "../../App.css";
 import ImageError from "../../../src/assets/images/auth-one-bg.jpg";
-import { ADDP, AddProducts, handleApiError, ProductTitle, StatusMessage, Tet } from "../../Components/Constants/Common";
+import { Timetable } from "../../Components/Constants/Common";
+import { ADDP, AddProducts, handleApiError, ProductTitle, StatusMessage } from "../../Components/Constants/Common";
 import BaseButton from "../../Components/Base/Button";
 import BaseInput from "../../Components/Base/Input";
 import { Cats } from "../../Components/Constant/Common";
@@ -92,12 +93,12 @@ const Product = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
-                  <h5 className="card-title mb-0">{Tet.Pm}</h5>
+                  <h5 className="card-title mb-0">{Timetable.ProdcutModel}</h5>
                   <BaseButton
                     color="success"
                     onClick={() => navigate("/AddProduct")}
                   >
-                    <i className="ri-add-line align-bottom me-1"></i> {Tet.Ad}
+                    <i className="ri-add-line align-bottom me-1"></i> {Timetable.Add}
                   </BaseButton>
                 </CardHeader>
 
@@ -109,11 +110,11 @@ const Product = () => {
                       <BaseTable className="table table-bordered table-hover">
                         <thead className="table-light">
                           <tr>
-                            <th>{Tet.I1}</th>
-                            <th>{Tet.I2}</th>
-                            <th>{Tet.I3}</th>
-                            <th>{Tet.I4}</th>
-                            <th>{Tet.I5}</th>
+                            <th>{Timetable.Item1}</th>
+                            <th>{Timetable.Item2}</th>
+                            <th>{Timetable.Item3}</th>
+                            <th>{Timetable.Item4}</th>
+                            <th>{Timetable.Item5}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -168,7 +169,7 @@ const Product = () => {
         <CommonDeleteModal
           isOpen={modaldelete}
           toggle={() => setmodaldelete(!modaldelete)}
-          message={Tet.Message}
+          message={Timetable.Message}
           confirmDelete={confirmDelete}
         />
         <ToastContainer />
