@@ -116,11 +116,55 @@ export const CategoryOptions = [
   };
   export const productValidationSchema = () =>
     Yup.object({
-      name: Yup.string().required("Product name is required"),
+      name: Yup.string()
+        .trim()
+        .required("Product name is required"),
+  
       price: Yup.number()
         .typeError('Price must be a number')
         .required('Price is required')
-        .positive('Price must be positive'),
-      description: Yup.string(),
-      category_id: Yup.string().required('Category is required'),
+        .moreThan(0, 'Price must be greater than 0'),
+  
+      description: Yup.string()
+        .trim()
+        .max(1000, 'Description should not exceed 1000 characters'),
+  
+      category_id: Yup.string()
+        .required('Category is required'),
     });
+   export const ReportModule = {
+      ReportTitle: "Report",
+      ReportPurchase: "purchase",
+      ReportSales: "sales",
+      StatusTrue: "true",
+      OrderAsc: "asc",
+      OrderDesc: "desc",
+      StringValue: "string",
+      True: "true",
+      False: "false",
+      EndDateErrorMessage: "End date cannot be a future date.",
+    };
+    export const StatusOptions = [
+      { value: "", label: "All Status" },
+      { value: "true", label: "True" },
+      { value: "false", label: "False" },
+    ];
+    export const Data={
+      Datavalue:"https://e-commerce-gg46.onrender.com/api/order/users-report"
+    };
+    export const Values={
+      Valuesnumber:"No data available for the selected criteria.",
+      Showing:"showing",
+      Entries:"Entries"
+    };
+    export const SelectReport = [
+      { value: "", label: "Select Report" },
+      { value: "sales", label: "Sales Report" },
+      { value: "purchase", label: "Purchase Report" },
+    ];
+    export const Labels={
+      Status:"Status",
+      EndDate:"End Date",
+      StartDate:"Start Date",
+      Select:"Select Report Type"
+    };

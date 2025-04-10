@@ -39,7 +39,7 @@ const HorizontalLayout = (props) => {
             const pathName = process.env.PUBLIC_URL + path;
             const ul = document.getElementById("navbar-nav");
             const items = ul.getElementsByTagName("a");
-            let itemsArray = [...items]; // converts NodeList to Array
+            let itemsArray = [...items]; 
             removeActivation(itemsArray);
             let matchingMenuItem = itemsArray.find((x) => {
                 return x.pathname === pathName;
@@ -57,7 +57,7 @@ const HorizontalLayout = (props) => {
 
         if (parentCollapseDiv) {
 
-            // to set aria expand true remaining
+          
             parentCollapseDiv.classList.add("show");
             parentCollapseDiv.parentElement.children[0].classList.add("active");
             parentCollapseDiv.parentElement.children[0].setAttribute("aria-expanded", "true");

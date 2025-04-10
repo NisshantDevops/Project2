@@ -61,7 +61,7 @@ const ProfileDropdown = () => {
                         </Link>
                     </DropdownItem>
                     <DropdownItem className='p-0'>
-                        <Link to= "/logout" className="dropdown-item">
+                        <Link to= "/login" className="dropdown-item">
                             <span className="align-middle" data-key="t-logout">Logout</span>
                         </Link>
                     </DropdownItem>

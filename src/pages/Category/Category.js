@@ -92,11 +92,14 @@ const Category = () => {
     event.target.src = "/assets/images/default-image.jpg";
   };
 
-  const categorySchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    description: Yup.string().required('Description is required'),
-    image: Yup.mixed().required('Image is required'),
-  });
+   const getCategorySchema = (isEdit = false) =>
+    Yup.object().shape({
+      name: Yup.string().required('Name is required'),
+      description: Yup.string().required('Description is required'),
+      image: isEdit
+        ? Yup.mixed() 
+        : Yup.mixed().required('Image is required'), 
+    });
 
 
   const tog_list = () => {
@@ -170,81 +173,89 @@ const Category = () => {
 
   const resetForm = () => {
     setCategory({
-      id: "",
-      name: "",
-      description: "",
-      image: null,
+      id: null,
+      name: '',
+      description: '',
+      image: null
     });
-    setPreview(null);
     setCategoryImage(null);
-    setErrors({});
+    setPreview(null);
     setIsEditMode(false);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!categorySchema()) return;
-
+  
+    if (!category || !category.name || !category.name.trim()) {
+      toast.error("Category name is required");
+      return;
+    }
+  
+    setLoading(true);
+  
+    const payload = {
+      category_name: category.name.trim(),
+      description: category.description?.trim() || "",
+      category_image: category.image ,
+    };
+  
     try {
-      setLoading(true);
-      const payload = {
-        category_name: category.name || category.category_name,
-        description: category.description,
-      };
-      if (isEditMode) {
-        if (categoryImage) {
-          payload.category_image = categoryImage;
-        }
-      } else {
-        payload.category_image = categoryImage;
-      }
-
       const response = isEditMode
         ? await updateCategory(category.id, payload)
         : await addCategory(payload);
-
-
-      if (response?.success || StatusMessage(response?.statusCode)) {
+  
+      if (response?.status === response.StatusMessage || response?.success) {
+        toast.success(response.message);
+        setCategory({ id: "", name: "", description: "", image: null });
+        setPreview(null);
         tog_list();
         await loadCategories();
-        resetForm();
       } else {
-        throw new Error(response?.message);
+        toast.error(response.message);
       }
     } catch (err) {
-      console.error("Detailed Error:", {
-        message: err.message,
-        response: err.response?.data,
-      });
-      toast.error(
-        err.response?.data?.message || err.message
-      );
+      toast.error(err.response?.data?.message || err.message);
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
 
 
   const handleEditClick = (categories) => {
-
-    setCategory({
+    if (!categories) {
+      console.error("No category data passed to handleEditClick.");
+      return;
+    }
+  
+   
+    console.log("Editing category:", categories);
+  
+    const categoryData = {
       id: categories.id,
-      name: categories.category_name || categories.name,
-      description: categories.description,
-      image: categories.category_image || categories.image
-    });
+      name: categories.category_name || categories.name || "",
+      description: categories.description || "",
+      image: categories.category_image || categories.image || "",
+    };
+  
+    setCategory(categoryData);
     setIsEditMode(true);
-    if (categories.category_image || categories.image) {
-      const imgSrc = categories.category_image || categories.image;
-      setPreview(typeof imgSrc === 'string' ? imgSrc : URL.createObjectURL(imgSrc));
+  
+    const imgSrc = categoryData.image;
+  
+    if (imgSrc) {
+      const isString = typeof imgSrc === "string";
+  
+      const previewURL = isString ? imgSrc : URL.createObjectURL(imgSrc);
+      setPreview(previewURL);
       setCategoryImage(imgSrc);
     }
-
-    setmodallist(true);
+  
+    setmodallist(true); 
   };
-
+  
 
   const handleDeleteClick = (category) => {
     if (!category?.id) {
@@ -444,13 +455,15 @@ const Category = () => {
           }
         >
           <Formik
-            innerRef={(ref) => (formikRef = ref)}
+            innerRef={(ref) => {
+              formikRef.current = ref;
+            }}
             initialValues={{
               name: category?.name || "",
               description: category?.description || "",
               image: null,
             }}
-            validationSchema={categorySchema}
+            validationSchema={getCategorySchema(isEditMode)}
             onSubmit={(values) => handleSubmit(values)}
           >
             {({ setFieldValue, values, errors, touched }) => (
