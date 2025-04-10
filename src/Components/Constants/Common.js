@@ -53,7 +53,7 @@ export const Tender={
     Nam:"Name",
     EditProduct:"Edit Product",
     AddProduct:"Add Product",
-    UpdateProdcut:"Update Product",
+    UpdateProdcuts:"Update Product",
     Edit:"Edit",
     Remove:"Remove"
     
@@ -68,7 +68,10 @@ export const AddProducts={
     Cancel:"Cancel",
     Sc:"No image selected (current image will be kept)",
     Nia:"No image available",
-    IdValue:"category_id"
+    IdValue:"category_id",
+    Color:"color",
+    Size:"Size",
+    
 }
 ;
 export const MESSAGE = "Are you Sure You want to Remove this Record?";
@@ -149,9 +152,7 @@ export const CategoryOptions = [
       { value: "true", label: "True" },
       { value: "false", label: "False" },
     ];
-    export const Data={
-      Datavalue:"https://e-commerce-gg46.onrender.com/api/order/users-report"
-    };
+   
     export const Values={
       Valuesnumber:"No data available for the selected criteria.",
       Showing:"showing",
@@ -168,3 +169,25 @@ export const CategoryOptions = [
       StartDate:"Start Date",
       Select:"Select Report Type"
     };
+
+   export  const getCategorySchema = (isEdit = false) =>
+      Yup.object().shape({
+        name: Yup.string().required('Name is required'),
+        description: Yup.string().required('Description is required'),
+        image: isEdit
+          ? Yup.mixed() 
+          : Yup.mixed().required('Image is required'), 
+      });
+
+      export const handleLogout = () => {
+        
+        const confirmLogout = window.confirm("Are you sure you want to logout?");
+        if (confirmLogout) {
+          localStorage.removeItem("token"); 
+          
+          localStorage.removeItem("user");
+      
+         
+          window.location.href = "/login";
+        }
+      };

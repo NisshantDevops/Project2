@@ -4,6 +4,7 @@ import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
 import { DropDown } from '../Constants/LoginConstant';
+import { handleLogout } from '../Constants/Common';
 
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
 
@@ -30,7 +31,6 @@ const ProfileDropdown = () => {
         }
     }, [userName, user]);
 
-    //Dropdown Toggle
     const [isProfileDropdown, setIsProfileDropdown] = useState(false);
     const toggleProfileDropdown = () => {
         setIsProfileDropdown(!isProfileDropdown);
@@ -61,7 +61,7 @@ const ProfileDropdown = () => {
                         </Link>
                     </DropdownItem>
                     <DropdownItem className='p-0'>
-                        <Link to= "/login" className="dropdown-item">
+                        <Link to= {handleLogout} className="dropdown-item">
                             <span className="align-middle" data-key="t-logout">Logout</span>
                         </Link>
                     </DropdownItem>

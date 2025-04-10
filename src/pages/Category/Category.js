@@ -28,7 +28,7 @@ import { CATEGORY_COLUMNS } from "./CategoryConstant";
 import { Cats } from "../../Components/Constant/Common";
 import moment from "moment";
 import { StatusCodes } from "http-status-codes";
-import { StatusMessage, Tender } from "../../Components/Constants/Common";
+import { StatusMessage, Tender,getCategorySchema } from "../../Components/Constants/Common";
 import { MESSAGE } from "../../Components/Constants/Common";
 import ApiService from "../../Api/ApiService";
 import { PAGE_TITLE } from "../../Components/Constants/Common";
@@ -36,6 +36,7 @@ import { Ten } from "../../Components/Constants/Common";
 import { Texts } from "../../Components/Constants/Common";
 import BaseInput from "../../Components/Base/Input";
 import BaseButton from "../../Components/Base/Button";
+
 
 
 const Category = () => {
@@ -92,14 +93,6 @@ const Category = () => {
     event.target.src = "/assets/images/default-image.jpg";
   };
 
-   const getCategorySchema = (isEdit = false) =>
-    Yup.object().shape({
-      name: Yup.string().required('Name is required'),
-      description: Yup.string().required('Description is required'),
-      image: isEdit
-        ? Yup.mixed() 
-        : Yup.mixed().required('Image is required'), 
-    });
 
 
   const tog_list = () => {

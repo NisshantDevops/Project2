@@ -75,10 +75,10 @@ const ProductForm = () => {
     
         if (isEditMode) {
           await ProductApi.updateProduct(id, payload);
-          toast.success('Product updated successfully');
+          toast.success(StatusMessage.response);
         } else {
           await ProductApi.addProduct(payload);
-          toast.success('Product added successfully');
+          toast.success(StatusMessage.response);
         }
     
         navigate('/products');
@@ -113,7 +113,7 @@ const ProductForm = () => {
             );
           }
         } else {
-          toast.error('Failed to load product data.');
+          toast.error(StatusMessage.response);
         }
       } catch (err) {
         toast.error(StatusMessage);
@@ -157,7 +157,7 @@ const ProductForm = () => {
                         value={formik.values.name}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.name && formik.errors.name}
+                       
                       />
                     </BForm.Group>
                   </Col>
@@ -170,7 +170,7 @@ const ProductForm = () => {
                         value={formik.values.price}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.price && formik.errors.price}
+                        
                       />
                     </BForm.Group>
                   </Col>
@@ -180,7 +180,7 @@ const ProductForm = () => {
                   <Col md={6}>
                     <BForm.Group className="mb-3">
                       <BaseInput
-                        label="Color"
+                        label={AddProducts.Color}
                         type="text"
                         name="color"
                         value={formik.values.color}
@@ -192,7 +192,7 @@ const ProductForm = () => {
                   <Col md={6}>
                     <BForm.Group className="mb-3">
                       <BaseInput
-                        label="Size"
+                        label={AddProducts.Size}
                         type="text"
                         name="size"
                         value={formik.values.size}
@@ -204,19 +204,7 @@ const ProductForm = () => {
                 </Row>
 
                 <Row>
-                  <Col md={6}>
-                    <BForm.Group className="mb-3">
-                      <BaseInput
-                        label="Quantity"
-                        type="number"
-                        name="quantity"
-                        value={formik.values.quantity}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.quantity && formik.errors.quantity}
-                      />
-                    </BForm.Group>
-                  </Col>
+                 
                   <Col md={6}>
                     <BForm.Group className="mb-3">
                       <BaseInput
@@ -279,7 +267,7 @@ const ProductForm = () => {
                     loading={loading}
                     disabled={loading || !formik.dirty}
                   >
-                    {isEditMode ? Tender.UpdateProduct : Tender.AddProduct}
+                    {isEditMode ? Tender.UpdateProdcuts : Tender.AddProduct}
                   </BaseButton>
                 </div>
               </BForm>
