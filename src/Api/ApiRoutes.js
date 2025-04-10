@@ -15,3 +15,7 @@ export const UpdateProductRoute = "products/editproduct";
 export const ListProductRoute = "products/listofProducts";   
 export const DeleteProductRoute = "products/deleteproduct";      
 export const ProductFileUploadRoute = "products/upload";
+export const OrderReportRoute="order/orders-report";
+export const UserReportRoute="order/users-report";
+export const DashboardStatistic="dashboard/dashboard-statistic"
+export const DashboardPurchaseOrder="dashboard/dashboard-purchase-order"

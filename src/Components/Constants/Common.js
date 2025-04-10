@@ -53,10 +53,15 @@ export const Tender={
     Nam:"Name",
     EditProduct:"Edit Product",
     AddProduct:"Add Product",
-    UpdateProdcut:"Update Product",
+    UpdateProdcuts:"Update Product",
     Edit:"Edit",
-    Remove:"Remove"
-    
+    Remove:"Remove",
+    Requried:"Product name is required",
+    RequiredPrice: "Price is required",
+  TypeErrorPrice: "Price must be a number",
+  MinPrice: "Price must be greater than 0",
+  Deep:'Description should not exceed 1000 characters',
+    Under:'Category is required'
 };
 export const AddProducts={
     ProductName:"Product Name",
@@ -68,7 +73,11 @@ export const AddProducts={
     Cancel:"Cancel",
     Sc:"No image selected (current image will be kept)",
     Nia:"No image available",
-    IdValue:"category_id"
+    IdValue:"category_id",
+    Color:"color",
+    Size:"Size",
+    ProdcutList:"Product Listing"
+    
 }
 ;
 export const MESSAGE = "Are you Sure You want to Remove this Record?";
@@ -105,22 +114,65 @@ export const CategoryOptions = [
     } else {
       toast.error(error?.message );
     }
-  
     console.error('API Error:', error);
   };
+
+
+
   export const IsResponseOk = (response, expectedStatus) => {
     return response && response.status === expectedStatus;
   };
+
+
   export const Title={
        ProductValue :"PRODUCT_COLUMNS"
   };
-  export const productValidationSchema = () =>
-    Yup.object({
-      name: Yup.string().required("Product name is required"),
-      price: Yup.number()
-        .typeError('Price must be a number')
-        .required('Price is required')
-        .positive('Price must be positive'),
-      description: Yup.string(),
-      category_id: Yup.string().required('Category is required'),
-    });
+
+   export const ReportModule = {
+      ReportTitle: "Report",
+      ReportPurchase: "purchase",
+      ReportSales: "sales",
+      StatusTrue: "true",
+      OrderAsc: "asc",
+      OrderDesc: "desc",
+      StringValue: "string",
+      True: "true",
+      False: "false",
+      EndDateErrorMessage: "End date cannot be a future date.",
+    };
+    export const StatusOptions = [
+      { value: "", label: "All Status" },
+      { value: "true", label: "True" },
+      { value: "false", label: "False" },
+    ];
+   
+    export const Values={
+      Valuesnumber:"No data available for the selected criteria.",
+      Showing:"showing",
+      Entries:"Entries"
+    };
+    export const SelectReport = [
+      { value: "", label: "Select Report" },
+      { value: "sales", label: "Sales Report" },
+      { value: "purchase", label: "Purchase Report" },
+    ];
+    export const Labels={
+      Status:"Status",
+      EndDate:"End Date",
+      StartDate:"Start Date",
+      Select:"Select Report Type"
+    };
+
+   export  const getCategorySchema = (isEdit = false) =>
+      Yup.object().shape({
+        name: Yup.string().required('Name is required'),
+        description: Yup.string().required('Description is required'),
+        image: isEdit
+          ? Yup.mixed() 
+          : Yup.mixed().required('Image is required'), 
+      });
+
+      
+      export const ValidationMessages = {
+        requiredCategoryName: "Category name is required",
+      };
