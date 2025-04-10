@@ -104,8 +104,7 @@ const ProductForm = () => {
     
         navigate('/products');
       } catch (error) {
-        console.error('Product save failed:', error.response?.data || error.message);
-        toast.error(error.response?.data?.message?.[0] );
+        handleApiError(err);
       } finally {
         setLoading(false);
       }
