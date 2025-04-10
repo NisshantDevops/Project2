@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import * as Yup from 'yup';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Card, Spinner, Row, Col, Form as BForm } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import { ProductApi } from '../../Api/ProductApi';
-
+import ApiService from '../../Api/ApiService';
 import { Tender } from '../../Components/Constants/Common';
+import { Toaster } from '../../Components/Constants/Common';
+import { handleApiError } from '../../Components/Constants/Common';
 import {
   AddProducts,
   StatusMessage,
   CategoryOptions,
-  handleApiError,
   productValidationSchema,
 } from '../../Components/Constants/Common';
 
 import BaseButton from '../../Components/Base/Button';
 import BaseInput from '../../Components/Base/Input';
+import { API_BASE_URL } from '../../Api/ApiService';
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -29,7 +32,25 @@ const ProductForm = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
 
- 
+   const productValidationSchema = () =>
+    Yup.object({
+      name: Yup.string()
+        .trim()
+        .required(Tender.Requried),
+  
+      price: Yup.number()
+        .typeError(Tender.RequiredPrice)
+        .required(Tender.TypeErrorPrice)
+        .moreThan(0, Tender.MinPrice),
+  
+      description: Yup.string()
+        .trim()
+        .max(1000, Tender.Deep),
+  
+      category_id: Yup.string()
+        .required(Tender.Under),
+    });
+   
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -66,8 +87,8 @@ const ProductForm = () => {
               variant_image: {
                 image_path:
                   values.image?.name ||
-                  values.product_variants[0].variant_image?.image_path ||
-                  'xyz.png',
+                  values.product_variants[0].variant_image?.image_path 
+                    ,
               },
             },
           ],
@@ -109,14 +130,14 @@ const ProductForm = () => {
           const variant = fetchedData.product_variants?.[0] || {};
           if (variant?.variant_image?.image_path) {
             setImagePreview(
-              `${process.env.REACT_APP_BASE_URL}${variant.variant_image.image_path}`
+              `${API_BASE_URL }${variant.variant_image.image_path}`
             );
           }
         } else {
-          toast.error(StatusMessage.response);
+          setImagePreview(null);
         }
       } catch (err) {
-        toast.error(StatusMessage);
+        handleApiError(err);
       } finally {
         setLoading(false);
       }
@@ -247,7 +268,7 @@ const ProductForm = () => {
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        style={{ maxHeight: '150px', maxWidth: '100%' }}
+                       
                       />
                     </div>
                   )}

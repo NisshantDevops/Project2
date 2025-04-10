@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
 import { DropDown } from '../Constants/LoginConstant';
-import { handleLogout } from '../Constants/Common';
-
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
 
 const ProfileDropdown = () => {
-
-
     const profiledropdownData = createSelector(
         (state) => state.Profile,
         (state) => ({
@@ -30,11 +27,23 @@ const ProfileDropdown = () => {
             );
         }
     }, [userName, user]);
-
+    const navigate = useNavigate();  
     const [isProfileDropdown, setIsProfileDropdown] = useState(false);
     const toggleProfileDropdown = () => {
         setIsProfileDropdown(!isProfileDropdown);
     };
+    const handleLogout = () => {
+        
+        const confirmLogout = ("Are you sure you want to logout?");
+        if (confirmLogout) {
+          localStorage.removeItem("token"); 
+          
+          localStorage.removeItem("user");
+      
+          navigate('/login');
+    
+        }
+      };
     return (
         <React.Fragment>
             <Dropdown isOpen={isProfileDropdown} toggle={toggleProfileDropdown} className="ms-sm-3 header-item topbar-user">

@@ -55,8 +55,13 @@ export const Tender={
     AddProduct:"Add Product",
     UpdateProdcuts:"Update Product",
     Edit:"Edit",
-    Remove:"Remove"
-    
+    Remove:"Remove",
+    Requried:"Product name is required",
+    RequiredPrice: "Price is required",
+  TypeErrorPrice: "Price must be a number",
+  MinPrice: "Price must be greater than 0",
+  Deep:'Description should not exceed 1000 characters',
+    Under:'Category is required'
 };
 export const AddProducts={
     ProductName:"Product Name",
@@ -71,6 +76,7 @@ export const AddProducts={
     IdValue:"category_id",
     Color:"color",
     Size:"Size",
+    ProdcutList:"Product Listing"
     
 }
 ;
@@ -108,33 +114,20 @@ export const CategoryOptions = [
     } else {
       toast.error(error?.message );
     }
-  
     console.error('API Error:', error);
   };
+
+
+
   export const IsResponseOk = (response, expectedStatus) => {
     return response && response.status === expectedStatus;
   };
+
+
   export const Title={
        ProductValue :"PRODUCT_COLUMNS"
   };
-  export const productValidationSchema = () =>
-    Yup.object({
-      name: Yup.string()
-        .trim()
-        .required("Product name is required"),
-  
-      price: Yup.number()
-        .typeError('Price must be a number')
-        .required('Price is required')
-        .moreThan(0, 'Price must be greater than 0'),
-  
-      description: Yup.string()
-        .trim()
-        .max(1000, 'Description should not exceed 1000 characters'),
-  
-      category_id: Yup.string()
-        .required('Category is required'),
-    });
+
    export const ReportModule = {
       ReportTitle: "Report",
       ReportPurchase: "purchase",
@@ -179,15 +172,7 @@ export const CategoryOptions = [
           : Yup.mixed().required('Image is required'), 
       });
 
-      export const handleLogout = () => {
-        
-        const confirmLogout = window.confirm("Are you sure you want to logout?");
-        if (confirmLogout) {
-          localStorage.removeItem("token"); 
-          
-          localStorage.removeItem("user");
       
-         
-          window.location.href = "/login";
-        }
+      export const ValidationMessages = {
+        requiredCategoryName: "Category name is required",
       };

@@ -22,6 +22,7 @@ import BaseButton from "../../Components/Base/Button";
 import BaseTable from "../Table/BaseTable";
 import {ProductContant} from "./productConstants"
 import { Tender } from "../../Components/Constants/Common";
+import { AddProducts } from "../../Components/Constants/Common";
 
 
 const Product = () => {
@@ -32,7 +33,7 @@ const Product = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  document.title = "Product Listing";
+  document.title = AddProducts.ProdcutList;
 
   const handleImageError = (event) => {
     event.target.onerror = null;
@@ -49,7 +50,7 @@ const Product = () => {
       if (Array.isArray(productsArray)) {
         const updatedProducts = productsArray.map((product, index) => ({
           ...product,
-          product_id: product.product_id || index + 1,
+          product_id: product.product_id ,
         }));
         setProducts(updatedProducts);
       } else {
@@ -77,7 +78,7 @@ const Product = () => {
     try {
       const response = await deleteProduct(productToDelete.product_id);
       if (IsResponseOk(response)) {
-        toast.success("Product deleted successfully!");
+        toast.success(response?.Message||StatusMessage);
         setProducts((prev) =>
           prev.filter((item) => item.product_id !== productToDelete.product_id)
         );
