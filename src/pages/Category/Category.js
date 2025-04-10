@@ -29,6 +29,7 @@ import { Cats } from "../../Components/Constant/Common";
 import moment from "moment";
 import { StatusCodes } from "http-status-codes";
 import { StatusMessage, Tender,getCategorySchema } from "../../Components/Constants/Common";
+import {handleApiError} from "../../Components/Constants/Common"
 import { MESSAGE } from "../../Components/Constants/Common";
 import ApiService from "../../Api/ApiService";
 import { PAGE_TITLE } from "../../Components/Constants/Common";
@@ -36,7 +37,7 @@ import { Ten } from "../../Components/Constants/Common";
 import { Texts } from "../../Components/Constants/Common";
 import BaseInput from "../../Components/Base/Input";
 import BaseButton from "../../Components/Base/Button";
-
+import {ValidationMessages} from "../../Components/Constants/Common";
 
 
 const Category = () => {
@@ -62,6 +63,16 @@ const Category = () => {
   const [sortDirection, setSortDirection] = useState("asc");
   const [categoryImage, setCategoryImage] = useState("");
   const formikRef = useRef(null);
+
+
+ 
+ const categoryValidationSchema = Yup.object().shape({
+    name: Yup.string().trim().required(ValidationMessages.requiredCategoryName),
+    description: Yup.string().trim().optional(),
+  });
+ const isResponseSuccess = (response) => {
+    return response?.status === response?.StatusMessage || response?.success === true;
+  };
 
   document.title = PAGE_TITLE;
   const loadCategories = useCallback(async () => {
@@ -179,10 +190,7 @@ const Category = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!category || !category.name || !category.name.trim()) {
-      toast.error("Category name is required");
-      return;
-    }
+    const validationSchema={categoryValidationSchema}
   
     setLoading(true);
   
@@ -197,17 +205,17 @@ const Category = () => {
         ? await updateCategory(category.id, payload)
         : await addCategory(payload);
   
-      if (response?.status === response.StatusMessage || response?.success) {
+       if(isResponseSuccess(response)){
         toast.success(response.message);
         setCategory({ id: "", name: "", description: "", image: null });
         setPreview(null);
         tog_list();
         await loadCategories();
       } else {
-        toast.error(response.message);
+        handleApiError();
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      handleApiError(err);
     } finally {
       setLoading(false);
     }
@@ -222,10 +230,6 @@ const Category = () => {
       console.error("No category data passed to handleEditClick.");
       return;
     }
-  
-   
-    console.log("Editing category:", categories);
-  
     const categoryData = {
       id: categories.id,
       name: categories.category_name || categories.name || "",
